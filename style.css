@@ -88,9 +88,8 @@ a:hover{
 .sliderButtons {
 
     display: flex;
-    position: absolute;
-    bottom: 0;
-    right: 70%;
+    
+    margin-top: auto;
 }
 
 .taskInfo {
@@ -119,6 +118,8 @@ a:hover{
     font-size: 15px;
     color: whitesmoke;
     margin-bottom: 20px;
+    border: none;
+    border-bottom: 1px rgba(211, 211, 211, 0.568) solid;
 }
 
 
