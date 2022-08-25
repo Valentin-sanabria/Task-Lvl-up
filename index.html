@@ -63,32 +63,45 @@
     <div id="ThisWeek">
     
             
-        <div id="taskContainerThisWeek">
-    
-            <h2 class="text">This week</h2>
+        <div id="taskContainerSlider">
+            
+            <div class="slider">
+                <h2 class="text">This week</h2>
+
+                <div class="sliderButtons">
+                    <h3 class="bodyText"> < </h3>
+                    <h3 class="bodyText"> ...</h3>
+                    <h3 class="bodyText"> > </h3>
+                </div>
+                
+            </div>
     
             <div id="divWeekTasks">
     
                 <div class="task">                
                     <p class="taskAdded bodyText"> •Went to the Gym</p>
+                    <p class="timesDone"> 20  times</p>
                     <p class="taskXP favouriteColor"> +10xp</p>
                 </div>
     
                 
                 <div class="task">
                     <p class="taskAdded bodyText"> •Cooked dinner</p>
+                    <p class="timesDone"> 2   times</p>
                     <p class="taskXP favouriteColor"> +5xp</p>
                 </div>
     
                 
                 <div class="task">
                     <p class="taskAdded bodyText"> •Studied Japanese</p>
+                    <p class="timesDone"> 32  times</p>
                     <p class="taskXP favouriteColor"> +100xp</p>
                 </div>
     
                 
                 <div class="task">
                     <p class="taskAdded bodyText"> •Coded for 2hs</p>
+                    <p class="timesDone"> 6   times</p>
                     <p class="taskXP favouriteColor"> +22xp</p>
                 </div>
                 
@@ -110,36 +123,42 @@
     <div id="LevelInfo">
 
         <h1 class="text">Lvl 22</h1>
-        <div id="xpBar"></div>
-        <p class="text">240 / 727</p>
+        <div id="xpBar"><div id="xpBarProgress"></div></div>
+        <p class="bodyText">240 / 727</p>
 
     </div>
         <p>----------------------</p>
     <div id="TaskExperienceSettings">
    
+        <div class="taskInfo">
+            <p class="bodyText">Task name</p>
+            <p class="bodyText">XP per hour</p>
+        </div>
+
         <div id="task1" class="task">                
-            <p class="taskAdded"> -Went to the Gym</p>
-            <p class="taskXP"> +10xp</p>
+            <p class="taskAdded bodyText"> -Went to the Gym</p>
+            <p class="taskXP favouriteColor"> +10xp</p>
        </div>
 
        
        <div id="task2" class="task">
-           <p class="taskAdded"> -Cooked dinner</p>
-           <p class="taskXP"> +5xp</p>
+           <p class="taskAdded bodyText"> -Cooked dinner</p>
+           <p class="taskXP favouriteColor"> +5xp</p>
        </div>
 
        
        <div id="task3" class="task">
-           <p class="taskAdded"> -Studied Japanese</p>
-           <p class="taskXP"> +100xp</p>
+           <p class="taskAdded bodyText"> -Studied Japanese</p>
+           <p class="taskXP favouriteColor"> +100xp</p>
        </div>
 
        
        <div id="task4" class="task">
-           <p class="taskAdded"> -Coded for 2hs</p>
-           <p class="taskXP"> +22xp</p>
+           <p class="taskAdded bodyText"> -Coded for 2hs</p>
+           <p class="taskXP favouriteColor"> +22xp</p>
        </div>
 
+        <p class="bodyText hugBottom">Coded by <a href="https://github.com/Valentin-sanabria">Valentín Sanabria</a></p>
     </div>
 
 </div>

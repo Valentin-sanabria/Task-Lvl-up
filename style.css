@@ -1,25 +1,41 @@
 * {
 
     background-color: rgb(39, 38, 38);
-
+    
 }
 
 body {
 
-    
+    padding: 22px;
     display: flex;
     justify-content: space-between;
 
-    padding: 22px;
+}
+
+h2 {
+
+    margin-bottom: 15px;
 
 }
 
+a{
+
+    text-decoration: none;
+    color: rgb(151, 128, 204);
+}
+
+a:hover{
+
+    text-decoration: underline;
+    color: rgb(151, 128, 204);
+    
+}
 .text {
 
     color: rgb(218, 218, 218);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
-    font-size: 26px;
+    font-size: 32px;
 }
 
 .bodyText {
@@ -27,7 +43,61 @@ body {
     color: rgb(218, 218, 218);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
+    font-size: 19px;
+    margin: 18px 0px 18px 18px;
+}
+
+.favouriteColor {
+
     font-size: 18px;
+    margin: 18px 18px 18px 0px;
+    color: rgb(185, 162, 230);
+    background-color: rgba(255, 0, 0, 0);
+
+}
+
+.timesDone {
+
+    color: rgb(218, 218, 218);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgba(255, 0, 0, 0);
+    font-size: 19px;
+}
+
+.hugBottom {
+
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+}
+
+/* Left section of web */
+#ListOfTasks {
+
+    width: 60%;
+
+}
+
+.slider{
+    
+    display: flex;
+    position: relative;
+
+}
+
+.sliderButtons {
+
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 70%;
+}
+
+.taskInfo {
+
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 14px;
 }
 
 .task {
@@ -42,9 +112,46 @@ body {
 
 }
 
-.favouriteColor {
+#inputTask{
 
-    color: rgb(185, 162, 230);
-    background-color: rgba(255, 0, 0, 0);
+    width: 33%;
+    height: 22px;
+    font-size: 15px;
+    color: whitesmoke;
+    margin-bottom: 20px;
+}
 
+
+/* Rigth section of web */
+#LevelAndSettings {
+
+    width: 25%;
+    position: relative;
+}
+
+#LevelInfo {
+
+    padding: 2px 18px;
+    border-radius: 12px;
+    justify-content: center;
+    background-color: rgb(58, 56, 56);
+
+}
+
+#xpBar {
+
+    height: 20px;
+    border-radius: 22px;
+    background-color: rgb(192, 187, 192);
+
+}
+
+#xpBarProgress {
+
+    height: 20px;
+    width: 2%;
+    border-radius: 22px;
+    overflow: hidden ;
+    background-color: rgb(141, 47, 141);
+    
 }
