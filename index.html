@@ -79,30 +79,30 @@
             <div id="divWeekTasks">
     
                 <div class="task">                
-                    <p class="taskAdded bodyText"> •Went to the Gym</p>
+                    <p class="bodyText"> •Went to the Gym</p>
                     <p class="timesDone"> 20  times</p>
-                    <p class="taskXP favouriteColor"> +10xp</p>
+                    <p class="favouriteColor"> +10xp</p>
                 </div>
     
                 
                 <div class="task">
-                    <p class="taskAdded bodyText"> •Cooked dinner</p>
+                    <p class="bodyText"> •Cooked dinner</p>
                     <p class="timesDone"> 2   times</p>
-                    <p class="taskXP favouriteColor"> +5xp</p>
+                    <p class="favouriteColor"> +5xp</p>
                 </div>
     
                 
                 <div class="task">
-                    <p class="taskAdded bodyText"> •Studied Japanese</p>
+                    <p class="bodyText"> •Studied Japanese</p>
                     <p class="timesDone"> 32  times</p>
-                    <p class="taskXP favouriteColor"> +100xp</p>
+                    <p class="favouriteColor"> +100xp</p>
                 </div>
     
                 
                 <div class="task">
-                    <p class="taskAdded bodyText"> •Coded for 2hs</p>
+                    <p class="bodyText"> •Coded for 2hs</p>
                     <p class="timesDone"> 6   times</p>
-                    <p class="taskXP favouriteColor"> +22xp</p>
+                    <p class="favouriteColor"> +22xp</p>
                 </div>
                 
                 
@@ -123,12 +123,12 @@
     <div id="LevelInfo">
 
         <div id="horizontal">
-            <h1 class="text">Lvl 22</h1>
+            <h1 class="text">Lvl <span id="currentLVL" class="text">1</span></h1>
             <button>Save progress <img src="imgs/download-icon.png" alt="download-icon"></button>
         </div>
 
             <div id="xpBar"><div id="xpBarProgress"></div></div>
-            <p class="bodyText">240 / 727</p>
+            <p id="totalXP" class="bodyText">240 / 727</p>
 
 
     </div>
@@ -143,26 +143,26 @@
         </div>
 
         <div id="task1" class="task">                
-            <p class="taskAdded bodyText"> -Went to the Gym</p>
-            <p class="taskXP favouriteColor"> +10xp</p>
+            <p class="bodyText"> -Went to the Gym</p>
+            <p class="favouriteColor"> +10xp</p>
        </div>
 
        
        <div id="task2" class="task">
-           <p class="taskAdded bodyText"> -Cooked dinner</p>
-           <p class="taskXP favouriteColor"> +5xp</p>
+           <p class="bodyText"> -Cooked dinner</p>
+           <p class="favouriteColor"> +5xp</p>
        </div>
 
        
        <div id="task3" class="task">
-           <p class="taskAdded bodyText"> -Studied Japanese</p>
-           <p class="taskXP favouriteColor"> +100xp</p>
+           <p class="bodyText"> -Studied Japanese</p>
+           <p class="favouriteColor"> +100xp</p>
        </div>
 
        
        <div id="task4" class="task">
-           <p class="taskAdded bodyText"> -Coded for 2hs</p>
-           <p class="taskXP favouriteColor"> +22xp</p>
+           <p class="bodyText"> -Coded for 2hs</p>
+           <p class="favouriteColor"> +22xp</p>
        </div>
 
         <p class="bodyText hugBottom">Coded by <a href="https://github.com/Valentin-sanabria">Valentín Sanabria</a></p>
@@ -171,11 +171,8 @@
 </div>
 
 
-
-
-
 </body>
 
-
+<script src="script.js"></script>
 
 </html>

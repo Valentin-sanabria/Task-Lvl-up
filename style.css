@@ -124,7 +124,8 @@ a:hover{
     
     display: flex;
     justify-content: space-between;
-    
+    align-content: center;
+    align-items: center;
     padding: 6px;
     margin-top: 8px;
     border-radius: 22px;
