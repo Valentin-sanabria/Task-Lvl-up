@@ -12,10 +12,31 @@ body {
 
 }
 
+h1 {
+
+    display: inline;
+}
+
 h2 {
 
     margin-bottom: 15px;
 
+}
+
+button {
+
+    background-color: rgb(178, 156, 228);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 5px;
+    color: rgb(0, 0, 0);
+}
+
+button img {
+
+    width: 12px;
+    background-color: rgba(255, 0, 0, 0);
+    color: whitesmoke;
 }
 
 a{
@@ -132,9 +153,20 @@ a:hover{
 
 #LevelInfo {
 
-    padding: 2px 18px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
     border-radius: 12px;
     justify-content: center;
+    background-color: rgb(58, 56, 56);
+
+}
+
+#horizontal { 
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: rgb(58, 56, 56);
 
 }
@@ -143,6 +175,7 @@ a:hover{
 
     height: 20px;
     border-radius: 22px;
+    margin-top: 26px;
     background-color: rgb(192, 187, 192);
 
 }
