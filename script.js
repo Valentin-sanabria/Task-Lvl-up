@@ -3,6 +3,11 @@ let taskInput  = document.getElementById("inputTask");
 let taskAdded = document.querySelectorAll("p.taskAdded");
 let taskXP = document.querySelectorAll("p.taskXP");
 let currentLVL  = document.getElementById("currentLVL");
+let addNewTask = document.getElementById("newTaskButton")
+let modal = document.getElementById("modalNewTask");
+let blurBackground = document.getElementById("blurBackground")
+let closeModal = document.getElementById("closeButton");
+
 
 totalXP = 0;
 let totalLevelXP = 727;
@@ -19,6 +24,7 @@ taskInput.addEventListener("keypress", function(x) {
         console.log("pepe");
         
         taskInput.value = "";
+        //Call function and send sliced string for parsing. For ex: "+15xp" → "15"
         addXP( (taskXP[i].innerHTML).slice(2,-2) );
         i++;
     }
@@ -31,6 +37,7 @@ taskInput.addEventListener("keypress", function(x) {
 
 })
 
+//Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
 function addXP(taskXP) {
     
     totalXP = totalXP + parseInt(taskXP);
@@ -39,6 +46,7 @@ function addXP(taskXP) {
     checkLVLUP();
 }
 
+//Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
 function checkLVLUP() {
 
     if (totalXP >= totalLevelXP) {
@@ -52,3 +60,18 @@ function checkLVLUP() {
     }
                                        
 }
+
+//Opens modal to configure and add a new task.
+addNewTask.addEventListener("click", openModal =>{
+
+    modal.classList.replace("hidden", "shown");
+    blurBackground.classList.replace("hidden", "shown");
+})
+
+//Closes modal
+closeModal.addEventListener("click", closeModal =>{
+
+    modal.classList.replace("shown", "hidden");
+    blurBackground.classList.replace("shown", "hidden");
+
+})

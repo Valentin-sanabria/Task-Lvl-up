@@ -14,162 +14,194 @@
 
 <body>
     
-<!-- List of today tasks and This week tasks -->
-<div id="ListOfTasks">
+    <div id="gigaContainer">
 
-    <div id="Today">
+           <!-- List of today tasks and This week tasks -->
+    <div id="ListOfTasks">
 
-        <h2 class="text">Today</h2>
-    
-        <div id="taskContainerToday">
-    
-            <input type="text" name="" id="inputTask" placeholder="What task did you do today?">
-    
-            <div id="divAddedTasks">
-    
-                <div id="task1" class="task">                
-                     <p class="taskAdded bodyText"> •Went to the Gym</p>
-                     <p class="taskXP favouriteColor"> +10xp</p>
+        <div id="Today">
+
+            <h2 class="text">Today</h2>
+        
+            <div id="taskContainerToday">
+        
+                <input type="text" name="" id="inputTask" placeholder="What task did you do today?">
+        
+                <div id="divAddedTasks">
+        
+                    <div id="task1" class="task">                
+                        <p class="taskAdded bodyText"> •Went to the Gym</p>
+                        <p class="taskXP favouriteColor"> +10xp</p>
+                    </div>
+        
+                    
+                    <div id="task2" class="task">
+                        <p class="taskAdded bodyText"> •Cooked dinner</p>
+                        <p class="taskXP favouriteColor"> +5xp</p>
+                    </div>
+        
+                    
+                    <div id="task3" class="task">
+                        <p class="taskAdded bodyText"> •Studied Japanese</p>
+                        <p class="taskXP favouriteColor"> +100xp</p>
+                    </div>
+        
+                    
+                    <div id="task4" class="task">
+                        <p class="taskAdded bodyText"> •Coded for 2hs</p>
+                        <p class="taskXP favouriteColor"> +22xp</p>
+                    </div>               
+        
                 </div>
-    
-                
-                <div id="task2" class="task">
-                    <p class="taskAdded bodyText"> •Cooked dinner</p>
-                    <p class="taskXP favouriteColor"> +5xp</p>
-                </div>
-    
-                
-                <div id="task3" class="task">
-                    <p class="taskAdded bodyText"> •Studied Japanese</p>
-                    <p class="taskXP favouriteColor"> +100xp</p>
-                </div>
-    
-                
-                <div id="task4" class="task">
-                    <p class="taskAdded bodyText"> •Coded for 2hs</p>
-                    <p class="taskXP favouriteColor"> +22xp</p>
-                </div>
-                
-                
-                
-    
+        
             </div>
-    
+        
+        
         </div>
-    
-    
-    </div>
-    
-    <div id="ThisWeek">
-    
-            
-        <div id="taskContainerSlider">
-            
-            <div class="slider">
-                <h2 class="text">This week</h2>
-
-                <div class="sliderButtons">
-                    <h3 class="bodyText"> < </h3>
-                    <h3 class="bodyText"> ...</h3>
-                    <h3 class="bodyText"> > </h3>
-                </div>
+        
+        <div id="ThisWeek">
+        
                 
+            <div id="taskContainerSlider">
+                
+                <div class="slider">
+                    <h2 class="text">This week</h2>
+
+                    <div class="sliderButtons">
+                        <h3 class="bodyText"> < </h3>
+                        <h3 class="bodyText"> ...</h3>
+                        <h3 class="bodyText"> > </h3>
+                    </div>
+                    
+                </div>
+        
+                <div id="divWeekTasks">
+        
+                    <div class="task">                
+                        <p class="bodyText"> •Went to the Gym</p>
+                        <p class="timesDone"> 20  times</p>
+                        <p class="favouriteColor"> +10xp</p>
+                    </div>
+        
+                    
+                    <div class="task">
+                        <p class="bodyText"> •Cooked dinner</p>
+                        <p class="timesDone"> 2   times</p>
+                        <p class="favouriteColor"> +5xp</p>
+                    </div>
+        
+                    
+                    <div class="task">
+                        <p class="bodyText"> •Studied Japanese</p>
+                        <p class="timesDone"> 32  times</p>
+                        <p class="favouriteColor"> +100xp</p>
+                    </div>
+        
+                    
+                    <div class="task">
+                        <p class="bodyText"> •Coded for 2hs</p>
+                        <p class="timesDone"> 6   times</p>
+                        <p class="favouriteColor"> +22xp</p>
+                    </div>
+                    
+                    
+                    
+        
+                </div>
+        
             </div>
-    
-            <div id="divWeekTasks">
-    
-                <div class="task">                
-                    <p class="bodyText"> •Went to the Gym</p>
-                    <p class="timesDone"> 20  times</p>
-                    <p class="favouriteColor"> +10xp</p>
-                </div>
-    
-                
-                <div class="task">
-                    <p class="bodyText"> •Cooked dinner</p>
-                    <p class="timesDone"> 2   times</p>
-                    <p class="favouriteColor"> +5xp</p>
-                </div>
-    
-                
-                <div class="task">
-                    <p class="bodyText"> •Studied Japanese</p>
-                    <p class="timesDone"> 32  times</p>
-                    <p class="favouriteColor"> +100xp</p>
-                </div>
-    
-                
-                <div class="task">
-                    <p class="bodyText"> •Coded for 2hs</p>
-                    <p class="timesDone"> 6   times</p>
-                    <p class="favouriteColor"> +22xp</p>
-                </div>
-                
-                
-                
-    
+        
+        </div>
+
+    </div>    
+
+    <!-- Shows current lvl, xp progress bar and the settings of each task. -->
+
+    <div id="LevelAndSettings">
+
+        <div id="LevelInfo">
+
+            <div class="horizontal">
+                <h1 class="text">Lvl <span id="currentLVL" class="text">1</span></h1>
+                <button>Save progress <img src="imgs/download-icon.png" alt="download-icon"></button>
             </div>
+
+                <div id="xpBar"><div id="xpBarProgress"></div></div>
+                <p id="totalXP" class="bodyText">240 / 727</p>
+
+
+        </div>
+
+            <p>----------------------</p>
+
+        <div id="TaskExperienceSettings">
     
-        </div>
-    
-    </div>
+            <div class="taskInfo">
+                <p class="bodyText">Task name</p>
+                <p class="bodyText">XP per hour / session</p>
+            </div>
 
-</div>    
-
-<!-- Shows current lvl, xp progress bar and the settings of each task. -->
-
-<div id="LevelAndSettings">
-
-    <div id="LevelInfo">
-
-        <div id="horizontal">
-            <h1 class="text">Lvl <span id="currentLVL" class="text">1</span></h1>
-            <button>Save progress <img src="imgs/download-icon.png" alt="download-icon"></button>
+            <div id="task1" class="task">                
+                <p class="bodyText"> -Went to the Gym</p>
+                <p class="favouriteColor"> +10xp</p>
         </div>
 
-            <div id="xpBar"><div id="xpBarProgress"></div></div>
-            <p id="totalXP" class="bodyText">240 / 727</p>
-
-
-    </div>
-
-        <p>----------------------</p>
-
-    <div id="TaskExperienceSettings">
-   
-        <div class="taskInfo">
-            <p class="bodyText">Task name</p>
-            <p class="bodyText">XP per hour</p>
+        
+        <div id="task2" class="task">
+            <p class="bodyText"> -Cooked dinner</p>
+            <p class="favouriteColor"> +5xp</p>
         </div>
 
-        <div id="task1" class="task">                
-            <p class="bodyText"> -Went to the Gym</p>
-            <p class="favouriteColor"> +10xp</p>
-       </div>
+        
+        <div id="task3" class="task">
+            <p class="bodyText"> -Studied Japanese</p>
+            <p class="favouriteColor"> +100xp</p>
+        </div>
 
-       
-       <div id="task2" class="task">
-           <p class="bodyText"> -Cooked dinner</p>
-           <p class="favouriteColor"> +5xp</p>
-       </div>
+        
+        <div id="task4" class="task">
+            <p class="bodyText"> -Coded for 2hs</p>
+            <p class="favouriteColor"> +22xp</p>
+        </div>
 
-       
-       <div id="task3" class="task">
-           <p class="bodyText"> -Studied Japanese</p>
-           <p class="favouriteColor"> +100xp</p>
-       </div>
+        <button id="newTaskButton"> <img src="imgs/add.png" alt="" > <span class="bodyText">Add new task</span>  </button>
+            <p class="bodyText hugBottom">Coded by <a href="https://github.com/Valentin-sanabria">Valentín Sanabria</a></p>
+        </div>
 
-       
-       <div id="task4" class="task">
-           <p class="bodyText"> -Coded for 2hs</p>
-           <p class="favouriteColor"> +22xp</p>
-       </div>
-
-        <p class="bodyText hugBottom">Coded by <a href="https://github.com/Valentin-sanabria">Valentín Sanabria</a></p>
     </div>
 
-</div>
+    </div>
+ 
+    <div id="modalNewTask" class="hidden">
 
+        <div id="modalHeader">      
+            <h3 class="text">Create a new task</h3>
+            <button id="closeButton">x</button>
+        </div>
+
+        <div id="modalBody">
+            <div id="inputModal">
+                <div>
+                    <p class="bodyText">What's the task?</p>
+                    <input type="text" name="taskName" id="" placeholder="Enter task name...">
+                </div>
+                <div>
+                    <p class="bodyText">How much XP does the task grant?</p>
+                    <input type="text" name="amountXp" id="" placeholder="Enter XP reward...">
+                </div>
+
+            </div>
+
+            <p class="bodyText">Is this task time or session based?</p>
+            <div class="horizontal">
+                <p class="bodyText">Time-Based</p><input type="checkbox" name="sessionOrTime" id=""><p class="bodyText">Session-Based</p>
+            </div>
+
+        </div>
+
+        <button>Create task</button> <button>Cancel</button>
+    </div>
+    <div id="blurBackground" class="hidden"></div>
 
 </body>
 

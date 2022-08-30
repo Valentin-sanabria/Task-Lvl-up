@@ -7,9 +7,15 @@
 body {
 
     padding: 22px;
+
+
+}
+
+#gigaContainer {
+
     display: flex;
     justify-content: space-between;
-
+    
 }
 
 h1 {
@@ -37,6 +43,16 @@ button img {
     width: 12px;
     background-color: rgba(255, 0, 0, 0);
     color: whitesmoke;
+}
+
+#newTaskButton {
+
+
+
+    padding: 6px;
+    margin-top: 8px;
+    border-radius: 22px;
+    background-color: rgb(58, 56, 56);
 }
 
 a{
@@ -95,7 +111,7 @@ a:hover{
 /* Left section of web */
 #ListOfTasks {
 
-    width: 60%;
+    width: 55%;
 
 }
 
@@ -148,7 +164,7 @@ a:hover{
 /* Rigth section of web */
 #LevelAndSettings {
 
-    width: 25%;
+    width: 30%;
     position: relative;
 }
 
@@ -163,7 +179,7 @@ a:hover{
 
 }
 
-#horizontal { 
+.horizontal { 
 
     display: flex;
     justify-content: space-between;
@@ -189,4 +205,80 @@ a:hover{
     overflow: hidden ;
     background-color: rgb(141, 47, 141);
     
+}
+
+/* Modal interface */
+
+.hidden {
+
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    transition: all 1.5s;
+}
+
+.shown {
+
+        opacity: 100;
+        transition: all 1.5s;
+
+}
+
+#modalNewTask {
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    padding: 22px;
+    border-radius: 16px;
+}
+
+#modalHeader {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+#modalBody {
+
+    display: flex;    
+    flex-direction: column;
+}
+
+#inputModal {
+
+}
+
+#closeButton {
+
+    height: 30px;
+    width: 30px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    text-align: center;
+    vertical-align: auto;
+}
+
+#blurBackground {
+    
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.541);
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
 }
