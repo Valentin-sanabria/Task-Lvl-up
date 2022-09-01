@@ -3,7 +3,8 @@ let taskInput  = document.getElementById("inputTask");
 let taskAdded = document.querySelectorAll("p.taskAdded");
 let taskXP = document.querySelectorAll("p.taskXP");
 let currentLVL  = document.getElementById("currentLVL");
-let addNewTask = document.getElementById("newTaskButton")
+let addNewTask = document.getElementById("newTaskButton");
+let tasksAddedList = document.getElementById("tasksAddedList");
 
 //Modal vars
 let modal = document.getElementById("modalNewTask");
@@ -94,7 +95,20 @@ cancelModal.addEventListener("click", closeModal =>{
 //Create task and add it to task list.
 createButton.addEventListener("click", createTask =>{
 
-    createTaskName.value
-    createTaskXP.value
 
+    let nuevaTask = document.createElement("li");
+    let pTask = document.createElement("p");
+    let spanPTask = document.createElement("span");
+
+    //Modify text of vars with text inputted by user. Add vars their respective classes for styling.
+    pTask.innerHTML = createTaskName.value;
+    spanPTask.innerText = "+" + createTaskXP.value + "xp";
+    pTask.classList.add("bodyText");
+    spanPTask.classList.add("favouriteColor");
+
+    //Add vars created to their corresponding fathers, pTask and spanPTask are brothers so 
+    //Justify-content picks up both. If span appended to p wont work. 
+    tasksAddedList.appendChild(nuevaTask);
+    nuevaTask.appendChild(pTask);
+    nuevaTask.appendChild(spanPTask);
 })

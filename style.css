@@ -255,7 +255,25 @@ a:hover{
   align-items: center;
 
 }
+ul {
 
+    padding: 0;
+}
+
+ul li {
+
+    color: whitesmoke;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    padding: 6px;
+    margin-top: 8px;
+    border-radius: 22px;
+    background-color: rgb(58, 56, 56);
+
+}
 #modalNewTask {
 
     position: fixed;
