@@ -1,4 +1,5 @@
 
+//Main page vars
 let taskInput  = document.getElementById("inputTask");
 let taskAdded = document.querySelectorAll("p.taskAdded");
 let taskXP = document.querySelectorAll("p.taskXP");
@@ -58,14 +59,34 @@ function checkLVLUP() {
 
     if (totalXP >= totalLevelXP) {
 
-        totalXP = 0;
-        totalLevelXP = Math.round(totalLevelXP * 1.26);
+        mediumLVLUP();
         
         currentLVL.innerHTML = parseInt(currentLVL.innerHTML) + 1; 
         currentXP.innerHTML = totalXP + " / " + totalLevelXP;
     
     }
                                        
+}
+
+function easyLVLUP() {
+
+    totalXP = totalXP-100;
+    totalLevelXP = Math.round(totalLevelXP * 1.22);
+
+}
+
+function mediumLVLUP() {
+
+    totalXP = totalXP-300;
+    totalLevelXP = Math.round(totalLevelXP * 1.22);
+
+}
+
+function hardLVLUP() {
+
+    totalXP = totalXP-600;
+    totalLevelXP = Math.round(totalLevelXP * 1.26);
+
 }
 
 //Opens modal to configure and add a new task.
@@ -75,15 +96,13 @@ addNewTask.addEventListener("click", openModal =>{
     blurBackground.classList.replace("hidden", "shown");
 })
 
-//Closes modal with X
+//Closes modal with X and with 'cancel' (diff functions)
 closeModal.addEventListener("click", closeModal =>{
 
     modal.classList.replace("shown", "hidden");
     blurBackground.classList.replace("shown", "hidden");
 
 })
-
-//Closes modal with 'cancel' button
 cancelModal.addEventListener("click", closeModal =>{
 
     modal.classList.replace("shown", "hidden");
@@ -95,20 +114,49 @@ cancelModal.addEventListener("click", closeModal =>{
 //Create task and add it to task list.
 createButton.addEventListener("click", createTask =>{
 
+    //Check inputs arent empty.
+    if( createTaskName.value != '' && createTaskXP.value != ''){
 
-    let nuevaTask = document.createElement("li");
-    let pTask = document.createElement("p");
-    let spanPTask = document.createElement("span");
+        let inputValidation = checkInput();
+        if (inputValidation == false){
+            return;
+        }
 
-    //Modify text of vars with text inputted by user. Add vars their respective classes for styling.
-    pTask.innerHTML = createTaskName.value;
-    spanPTask.innerText = "+" + createTaskXP.value + "xp";
-    pTask.classList.add("bodyText");
-    spanPTask.classList.add("favouriteColor");
+        let nuevaTask = document.createElement("li");
+        let pTask = document.createElement("p");
+        let spanPTask = document.createElement("span");
+    
+        //Modify text of vars with text inputted by user. Add vars their respective classes for styling.
+        pTask.innerHTML = createTaskName.value;
+        spanPTask.innerText = "+" + createTaskXP.value + "xp";
+        pTask.classList.add("bodyText");
+        spanPTask.classList.add("favouriteColor");
+    
+        //Add vars created to their corresponding fathers, pTask and spanPTask are brothers so 
+        //Justify-content picks up both. If span appended to p wont work. 
+        tasksAddedList.appendChild(nuevaTask);
+        nuevaTask.appendChild(pTask);
+        nuevaTask.appendChild(spanPTask);
 
-    //Add vars created to their corresponding fathers, pTask and spanPTask are brothers so 
-    //Justify-content picks up both. If span appended to p wont work. 
-    tasksAddedList.appendChild(nuevaTask);
-    nuevaTask.appendChild(pTask);
-    nuevaTask.appendChild(spanPTask);
+    }
+  
 })
+
+//Check input respects input desired.
+function checkInput(){
+
+    //Does not contain a-z|A-Z|spaces(\s) OR contains numbers(\d).
+    if ( /^[a-zA-Z\s]*$/.test(createTaskName.value) == false ||  /\d/.test(createTaskName.value) == true){
+       alert("Task names can not contain anything that is not a letter or a whitespace.");
+       return false;
+    }
+    //Contains anything that is NOT a number.
+    else if ( /\D/.test(createTaskXP.value) == true ){
+        alert("Task XP rewards can not contain anything that is not a number.")
+        return false;
+     }
+    
+    else {
+        return true;
+    }
+}
