@@ -2,10 +2,14 @@
 //Main page vars
 let taskInput  = document.getElementById("inputTask");
 let taskAdded = document.querySelectorAll("p.taskAdded");
-let taskXP = document.querySelectorAll("p.taskXP");
+let taskXP = document.querySelectorAll("span.taskXP");
 let currentLVL  = document.getElementById("currentLVL");
 let addNewTask = document.getElementById("newTaskButton");
 let tasksAddedList = document.getElementById("tasksAddedList");
+let confirmTasks = document.getElementById("confirmTasks");
+let ulDoneToday = document.getElementById("taskDoneToday");
+let ulDoneWeek = document.getElementById("taskDoneWeek")
+let divWeekTasks = document.getElementById("divWeekTasks");
 
 //Modal vars
 let modal = document.getElementById("modalNewTask");
@@ -33,7 +37,7 @@ taskInput.addEventListener("keypress", function(x) {
         
         taskInput.value = "";
         //Call function and send sliced string for parsing. For ex: "+15xp" → "15"
-        addXP( (taskXP[i].innerHTML).slice(2,-2) );
+        addXP( (taskXP[i].innerHTML).slice(1,-2) );
         i++;
     }
 
@@ -160,3 +164,49 @@ function checkInput(){
         return true;
     }
 }
+
+//Send today tasks to this week task list
+confirmTasks.addEventListener("click", todayToWeekly => {
+
+    ulDoneWeek = ulDoneToday.cloneNode(true);
+    ulDoneWeek.id = "taskDoneWeek";
+    divWeekTasks.appendChild(ulDoneWeek);
+
+    let allTasks = [];
+    let quantityAppareance = 0;
+    let itRepeated = false;
+    let pTaskWeek = document.querySelectorAll("ul#taskDoneWeek li p.taskAdded");
+    let timesTaskWeek = document.querySelectorAll("ul#taskDoneWeek li span.amountTimes");
+
+
+    for(let j of pTaskWeek){
+
+        allTasks.push(j);
+
+        for(let k of allTasks){
+
+            if ( j.innerHTML == k.innerHTML){
+
+                quantityAppareance++;
+                console.log(j.innerHTML +" se repitio " + quantityAppareance +"veces.");
+            }
+
+            if (quantityAppareance > 1){
+
+                console.log(j.innerHTML + " esta repetida.");
+                itRepeated =true;
+            }
+
+            if (itRepeated == true) {
+
+                j.innerHTML = "repetido.";
+            }
+
+            itRepeated = false;
+        }
+
+        quantityAppareance = 0;
+    }
+
+
+})
