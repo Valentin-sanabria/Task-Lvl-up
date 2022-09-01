@@ -181,25 +181,27 @@
 
         <div id="modalBody">
             <div id="inputModal">
-                <div>
-                    <p class="bodyText">What's the task?</p>
-                    <input type="text" name="taskName" id="" placeholder="Enter task name...">
+                <div class="centerModalQuestion">
+                    <p class="modalText">What's the task?</p>
+                    <input type="text" name="taskName" id="taskName" placeholder="Enter task name...">
                 </div>
-                <div>
-                    <p class="bodyText">How much XP does the task grant?</p>
-                    <input type="text" name="amountXp" id="" placeholder="Enter XP reward...">
+                <div class="centerModalQuestion">
+                    <p class="modalText">How much XP does the task grant?</p>
+                    <input type="text" name="amountXp" id="amountXp" placeholder="Enter XP reward...">
                 </div>
 
             </div>
 
-            <p class="bodyText">Is this task time or session based?</p>
-            <div class="horizontal">
-                <p class="bodyText">Time-Based</p><input type="checkbox" name="sessionOrTime" id=""><p class="bodyText">Session-Based</p>
+            <p class="modalText">Is this task time or session based?</p>
+            <div class="modalHorizontal">
+                <p class="bodyText">Time-Based</p><input type="checkbox" name="sessionOrTime" id="checkboxModal"><p class="bodyText">Session-Based</p>
             </div>
 
         </div>
+        <div id="modalButtons">
+            <button id="createButton">Create task</button> <button id="cancelButton">Cancel</button>    
+        </div>
 
-        <button>Create task</button> <button>Cancel</button>
     </div>
     <div id="blurBackground" class="hidden"></div>
 

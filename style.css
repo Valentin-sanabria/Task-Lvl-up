@@ -81,7 +81,7 @@ a:hover{
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
     font-size: 19px;
-    margin: 18px 0px 18px 18px;
+    margin: 16px 0px 18px 18px;
 }
 
 .favouriteColor {
@@ -184,8 +184,7 @@ a:hover{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(58, 56, 56);
-
+    background-color: inherit;
 }
 
 #xpBar {
@@ -216,13 +215,44 @@ a:hover{
     height: 0;
     margin: 0;
     padding: 0;
-    transition: all 1.5s;
 }
 
 .shown {
 
         opacity: 100;
         transition: all 1.5s;
+
+}
+
+.modalText{
+
+    color: rgb(218, 218, 218);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: rgba(255, 0, 0, 0);
+    font-size: 19px;
+    text-align: center;
+    margin-top: 22px;
+    margin-bottom: 12px;
+}
+
+#checkboxModal {
+
+    margin: 0px 26px;
+
+}
+
+.modalHorizontal { 
+
+    display: flex;
+    justify-content: center;
+    background-color: inherit;
+
+}
+
+.centerModalQuestion {
+    display: flex;
+    flex-direction: column;
+  align-items: center;
 
 }
 
@@ -255,9 +285,6 @@ a:hover{
     flex-direction: column;
 }
 
-#inputModal {
-
-}
 
 #closeButton {
 
@@ -269,6 +296,22 @@ a:hover{
     align-self: center;
     text-align: center;
     vertical-align: auto;
+}
+
+#modalButtons{
+
+    display: flex;
+    justify-content: right;
+
+}
+
+#modalButtons button{
+
+    margin: 12px;
+    margin-top: 22px;
+    font-size: 16px;
+    padding: 12px 18px;
+    
 }
 
 #blurBackground {

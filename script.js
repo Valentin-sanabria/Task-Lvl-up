@@ -4,9 +4,15 @@ let taskAdded = document.querySelectorAll("p.taskAdded");
 let taskXP = document.querySelectorAll("p.taskXP");
 let currentLVL  = document.getElementById("currentLVL");
 let addNewTask = document.getElementById("newTaskButton")
+
+//Modal vars
 let modal = document.getElementById("modalNewTask");
 let blurBackground = document.getElementById("blurBackground")
 let closeModal = document.getElementById("closeButton");
+let cancelModal = document.getElementById("cancelButton");
+let createButton = document.getElementById("createButton");
+let createTaskName = document.getElementById("taskName");
+let createTaskXP = document.getElementById("amountXp");
 
 
 totalXP = 0;
@@ -68,10 +74,27 @@ addNewTask.addEventListener("click", openModal =>{
     blurBackground.classList.replace("hidden", "shown");
 })
 
-//Closes modal
+//Closes modal with X
 closeModal.addEventListener("click", closeModal =>{
 
     modal.classList.replace("shown", "hidden");
     blurBackground.classList.replace("shown", "hidden");
+
+})
+
+//Closes modal with 'cancel' button
+cancelModal.addEventListener("click", closeModal =>{
+
+    modal.classList.replace("shown", "hidden");
+    blurBackground.classList.replace("shown", "hidden");
+
+})
+
+
+//Create task and add it to task list.
+createButton.addEventListener("click", createTask =>{
+
+    createTaskName.value
+    createTaskXP.value
 
 })
