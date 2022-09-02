@@ -183,23 +183,42 @@ confirmTasks.addEventListener("click", todayToWeekly => {
 
         allTasks.push(j);
 
-        for(let k of allTasks){
+        for(let k of pTaskWeek){
 
             if ( j.innerHTML == k.innerHTML){
 
                 quantityAppareance++;
-                console.log(j.innerHTML +" se repitio " + quantityAppareance +"veces.");
+                console.log(j.innerHTML +" se repitio " + quantityAppareance +"veces."); 
+                
+                if (j.parentElement.children[1].innerHTML == ""){
+
+                    j.parentElement.children[1].innerHTML = "1 time.";
+                }
             }
+            
 
-            if (quantityAppareance > 1){
+            //Remove duplicate.
+            if (quantityAppareance > 1 && quantityAppareance < 3){
 
+                //Update amount of times/hours the activity was done.
+                if (j.parentElement.children[1].innerHTML == ""){
+
+                    j.parentElement.children[1].innerHTML = "1 time.";
+
+                }
+                else {
+
+                    j.parentElement.children[1].innerHTML = ( parseInt(j.parentElement.children[1].innerHTML) + 1 ) + " times.";
+
+                }
+
+                //Update amount of XP the task has given in total.
+                j.parentElement.children[2].innerHTML = "x";     
+                k.parentElement.remove();
+                
                 console.log(j.innerHTML + " esta repetida.");
-                itRepeated =true;
-            }
+                quantityAppareance = 0;
 
-            if (itRepeated == true) {
-
-                j.innerHTML = "repetido.";
             }
 
             itRepeated = false;
