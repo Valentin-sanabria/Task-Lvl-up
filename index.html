@@ -27,16 +27,19 @@
             <div id="taskContainerToday">
         
                 <input type="text" name="" id="inputTask" placeholder="What task did you do today?">
-        
+                <div id="suggestions">
+                    <li class="bodyText">Study math</li>
+                    <li>Coded 10years</li>
+                </div>
                 <div id="divAddedTasks">
 
                     <ul id="taskDoneToday">
 
-                        <li> <p class="taskAdded bodyText"> •Went to the Gym</p> <span class="amountTimes bodyText"></span> <span class="taskXP favouriteColor">+10xp</span> </li>
-                        <li> <p class="taskAdded bodyText"> •Cooked dinner</p> <span class="amountTimes bodyText"></span> <span class="taskXP favouriteColor">+5xp</span> </li>
-                        <li> <p class="taskAdded bodyText"> •Studied Japanese</p> <span class="amountTimes bodyText"></span> <span class="taskXP favouriteColor">+100xp</span> </li>
-                        <li> <p class="taskAdded bodyText"> •Coded for 2hs</p> <span class="amountTimes bodyText"></span> <span class="taskXP favouriteColor">+22xp</span> </li>
-            
+                        <li> <p class="taskAdded bodyText"> •Went to the Gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+10xp</span> </li>
+                        <li> <p class="taskAdded bodyText"> •Cooked dinner</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+5xp</span> </li>
+                        <li> <p class="taskAdded bodyText"> •Studied Japanese</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+100xp</span> </li>
+                        <li> <p class="taskAdded bodyText"> •Coded for 2hs</p> <input class="amountTimes bodyText" type="number" min="1" value="1">  <span class="taskXP favouriteColor">+22xp</span> </li>
+                        
                     </ul>
 
                 </div>
@@ -61,8 +64,10 @@
                     
                 </div>
         
-                <div id="divWeekTasks">
-                                    
+                <div>
+                    <ul id="ulWeekTasks">
+
+                    </ul>
                 </div>
         
             </div>
@@ -82,7 +87,11 @@
                 <button>Save progress <img src="imgs/download-icon.png" alt="download-icon"></button>
             </div>
 
-                <div id="xpBar"><div id="xpBarProgress"></div></div>
+                <div id="xpBar">
+                    <div id="xpBarUnconfirmed">
+                        <div id="xpBarConfirmed"></div>
+                    </div>
+                </div>
                 <p id="totalXP" class="bodyText">240 / 727</p>
 
 
@@ -91,23 +100,18 @@
             <p>----------------------</p>
 
         <div id="TaskExperienceSettings">
-    
             <div class="taskInfo">
                 <p class="bodyText">Task name</p>
                 <p class="bodyText">XP per hour / session</p>
             </div>
 
-          <ul id="tasksAddedList">
+           <ul id="tasksAddedList">
+                <li> <p class="bodyText"> Studied Japanese</p> <span class="favouriteColor">+10xp</span></li>
+           </ul>
 
-            <li> <p class="bodyText"> Studied Japanese</p> <span class="favouriteColor">+10xp</span></li>
-            
-
-          </ul>
-
-        <button id="newTaskButton"> <img src="imgs/add.png" alt="" > <span class="bodyText">Add new task</span>  </button>
+            <button id="newTaskButton"> <img src="imgs/add.png" alt="" > <span class="bodyText">Add new task</span>  </button>
             <p class="bodyText hugBottom">Coded by <a href="https://github.com/Valentin-sanabria">Valentín Sanabria</a></p>
         </div>
-
     </div>
 
     </div>

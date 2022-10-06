@@ -2,14 +2,21 @@
 //Main page vars
 let taskInput  = document.getElementById("inputTask");
 let taskAdded = document.querySelectorAll("p.taskAdded");
+let amountTimesHs = document.querySelectorAll("input.amountTimes")
 let taskXP = document.querySelectorAll("span.taskXP");
 let currentLVL  = document.getElementById("currentLVL");
 let addNewTask = document.getElementById("newTaskButton");
 let tasksAddedList = document.getElementById("tasksAddedList");
 let confirmTasks = document.getElementById("confirmTasks");
 let ulDoneToday = document.getElementById("taskDoneToday");
-let ulDoneWeek = document.getElementById("taskDoneWeek")
-let divWeekTasks = document.getElementById("divWeekTasks");
+let ulWeekTasks = document.getElementById("ulWeekTasks");
+let allWeeklis = [];
+let tasksCreated = [];
+let suggestionsDiv = document.getElementById("suggestions");
+
+//Storage
+
+
 
 //Modal vars
 let modal = document.getElementById("modalNewTask");
@@ -19,44 +26,60 @@ let cancelModal = document.getElementById("cancelButton");
 let createButton = document.getElementById("createButton");
 let createTaskName = document.getElementById("taskName");
 let createTaskXP = document.getElementById("amountXp");
+let checkboxTimehs = document.getElementById("checkboxModal");
 
-
-totalXP = 0;
+let taskBaseXP = 0;
+let unconfirmedXPFromArray = [];
+let unconfirmedTotalXP = 0;
+let totalXP = 0;
 let totalLevelXP = 727;
 let currentXP = document.getElementById("totalXP");
 let i = 0;
+let j = 0;
 
+//                       XP AND TODAY FUNCTIONS
 
-//Move task from input to output task list.
+//Move task from input to today list.
 taskInput.addEventListener("keypress", function(x) {
 
     if (x.key === 'Enter'){
-
-        taskAdded[i].innerHTML = "• " + taskInput.value;
-        console.log("pepe");
-        
+        let newTask = document.createElement("p");
+        newTask.outerHTML = taskInput.value;
+        ulDoneToday.append(newTask);    
         taskInput.value = "";
-        //Call function and send sliced string for parsing. For ex: "+15xp" → "15"
-        addXP( (taskXP[i].innerHTML).slice(1,-2) );
-        i++;
     }
 
     //Reset counter so it modifies first task once again.
     if ( i === 4) {
-
         i = 0;
     }
-
 })
 
-//Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
-function addXP(taskXP) {
-    
-    totalXP = totalXP + parseInt(taskXP);
-    currentXP.innerHTML = totalXP + " / " + totalLevelXP;
+//Pop up suggestions based on user's input.
+taskInput.addEventListener("keyup", popsuggestion => {
 
-    checkLVLUP();
-}
+    let coincidence = [];
+        if((taskInput.value).length != 0){
+            suggestionsDiv.innerHTML = ""; 
+            //Filter all tasks created by making sure that, if both are lowercase, input and task recomendation are written with same letters.
+
+            tasksCreated.forEach(task => {
+                coincidence.push( tasksCreated.filter( () => {
+                    return task.taskName.toLowerCase().includes(taskInput.value.toLowerCase());
+                    })
+                )
+            }); 
+        }
+    let allSugestions = coincidence.map( (item) => {
+        console.log("DENTRO DE MAP\n");
+        console.log(item);
+        console.log(item[0].taskName);
+        return `<li class="bodyText">${item.taskName}</li>`;
+    }).join("");
+    // console.log(coincidence);
+    // console.log(allSugestions);
+    suggestionsDiv.innerHTML = allSugestions;
+})
 
 //Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
 function checkLVLUP() {
@@ -72,20 +95,19 @@ function checkLVLUP() {
                                        
 }
 
+// Difficulties settings.
 function easyLVLUP() {
 
     totalXP = totalXP-100;
     totalLevelXP = Math.round(totalLevelXP * 1.22);
 
 }
-
 function mediumLVLUP() {
 
     totalXP = totalXP-300;
     totalLevelXP = Math.round(totalLevelXP * 1.22);
 
 }
-
 function hardLVLUP() {
 
     totalXP = totalXP-600;
@@ -93,9 +115,11 @@ function hardLVLUP() {
 
 }
 
+
+//                     MODAL FUNCTIONS
+
 //Opens modal to configure and add a new task.
 addNewTask.addEventListener("click", openModal =>{
-
     modal.classList.replace("hidden", "shown");
     blurBackground.classList.replace("hidden", "shown");
 })
@@ -114,7 +138,6 @@ cancelModal.addEventListener("click", closeModal =>{
 
 })
 
-
 //Create task and add it to task list.
 createButton.addEventListener("click", createTask =>{
 
@@ -129,10 +152,20 @@ createButton.addEventListener("click", createTask =>{
         let nuevaTask = document.createElement("li");
         let pTask = document.createElement("p");
         let spanPTask = document.createElement("span");
-    
+        if(checkboxTimehs.checked) {
+            
+            hsOrTime = "session";
+        }
+        if(!checkboxTimehs.checked) {
+            
+            hsOrTime = "hours";
+        }
+
         //Modify text of vars with text inputted by user. Add vars their respective classes for styling.
-        pTask.innerHTML = createTaskName.value;
-        spanPTask.innerText = "+" + createTaskXP.value + "xp";
+        const taskCreated = new taskUserCreated(createTaskName.value, hsOrTime, createTaskXP.value);
+
+        pTask.innerHTML = taskCreated.taskName;
+        spanPTask.innerText = "+" + taskCreated.xpReward + "xp";
         pTask.classList.add("bodyText");
         spanPTask.classList.add("favouriteColor");
     
@@ -142,10 +175,21 @@ createButton.addEventListener("click", createTask =>{
         nuevaTask.appendChild(pTask);
         nuevaTask.appendChild(spanPTask);
 
+        //Add task created to tasks array to include in future input suggestions.
+        tasksCreated.push(taskCreated);
+
+        localStorage.setItem("task", JSON.stringify(taskCreated));
     }
-  
 })
 
+//Create objects for each user task.
+function taskUserCreated(name, hstimes, xp) {
+
+    this.taskName = name;
+    this.hsOrTime = hstimes;
+    this.xpReward = xp;   
+
+}
 //Check input respects input desired.
 function checkInput(){
 
@@ -165,67 +209,104 @@ function checkInput(){
     }
 }
 
+
+//                    THIS WEEK/MONTH FUNCTIONS
+
 //Send today tasks to this week task list
 confirmTasks.addEventListener("click", todayToWeekly => {
-
-    ulDoneWeek = ulDoneToday.cloneNode(true);
-    ulDoneWeek.id = "taskDoneWeek";
-    divWeekTasks.appendChild(ulDoneWeek);
 
     let allTasks = [];
     let quantityAppareance = 0;
     let itRepeated = false;
-    let pTaskWeek = document.querySelectorAll("ul#taskDoneWeek li p.taskAdded");
-    let timesTaskWeek = document.querySelectorAll("ul#taskDoneWeek li span.amountTimes");
+    let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
+    let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
+    let timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
 
+    timesTaskWeek.forEach(element => {
+        inputToText = document.createElement("p");
+        inputToText.classList.add("bodyText");
+        inputToText.innerText = element.value + " times.";
 
-    for(let j of pTaskWeek){
+        if (parseInt(element.value) == 1){
+            inputToText.innerText = element.value + " time.";
+        }
+        element.replaceWith(inputToText);
+    });
+    
 
-        allTasks.push(j);
+    //Check duplicates
+    for(let j of pTaskToday){
 
         for(let k of pTaskWeek){
 
             if ( j.innerHTML == k.innerHTML){
-
                 quantityAppareance++;
-                console.log(j.innerHTML +" se repitio " + quantityAppareance +"veces."); 
-                
-                if (j.parentElement.children[1].innerHTML == ""){
-
-                    j.parentElement.children[1].innerHTML = "1 time.";
-                }
             }
             
+            if ( k.parentElement.children[1].innerHTML == ""){
 
-            //Remove duplicate.
-            if (quantityAppareance > 1 && quantityAppareance < 3){
-
-                //Update amount of times/hours the activity was done.
-                if (j.parentElement.children[1].innerHTML == ""){
-
-                    j.parentElement.children[1].innerHTML = "1 time.";
-
-                }
-                else {
-
-                    j.parentElement.children[1].innerHTML = ( parseInt(j.parentElement.children[1].innerHTML) + 1 ) + " times.";
-
-                }
-
-                //Update amount of XP the task has given in total.
-                j.parentElement.children[2].innerHTML = "x";     
-                k.parentElement.remove();
-                
-                console.log(j.innerHTML + " esta repetida.");
-                quantityAppareance = 0;
-
+                k.parentElement.children[1].innerHTML == "1 time."
             }
 
-            itRepeated = false;
+            //Update amount of times/hours the activity was done and how much XP it has given in total.
+            if (quantityAppareance > 0 &&  j.innerHTML == k.innerHTML ){
+                k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(j.parentElement.children[1].value)) + " times.";
+                k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp"; 
+            }
+
+            //Remove duplicate.
+            if (quantityAppareance > 1 &&  j.innerHTML == k.innerHTML ){
+                k.parentElement.remove();
+            }
         }
 
+        if ( quantityAppareance === 0 ){
+            newUniqueTask = j.parentElement.cloneNode(true);
+            newUniqueTask.cl
+            ulWeekTasks.append(newUniqueTask);
+        }
         quantityAppareance = 0;
     }
 
+    allWeeklis = document.querySelectorAll("ul#taskDoneWeek li span.taskXP");
+    saveWeekProgress();
 
+    addXP(allWeeklis);
 })
+
+
+//Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
+function addXP(li) {
+    li.forEach(function sumXP() {
+    })
+    currentXP.innerHTML = totalXP + " / " + totalLevelXP;
+    checkLVLUP();
+}
+
+var amountOfTasks = "";
+var wholeWeekList = [];
+function saveWeekProgress() {
+    if(ulWeekTasks !== null) {
+        amountOfTasks = ulWeekTasks.children.length;
+        for (var p=0; p<amountOfTasks ; p++){
+            wholeWeekList[p] = ulWeekTasks.children[p].outerHTML;
+        }    
+        //Make the updated array a string and automatically save it on localStorage
+        localStorage.setItem("listOfWeek", JSON.stringify(wholeWeekList) );
+    }
+}
+
+var parsedWeekList = [];
+var liWeek = [];
+function loadWeekProgress() {
+    parsedWeekList = JSON.parse( localStorage.getItem("listOfWeek") );
+    if(parsedWeekList !== null){
+        for (var p=0; p<parsedWeekList.length ; p++){
+            liWeek[p] = document.createElement("li");
+            ulWeekTasks.append(liWeek[p]);
+            liWeek[p].outerHTML = parsedWeekList[p];
+        }
+    }
+}
+
+loadWeekProgress();

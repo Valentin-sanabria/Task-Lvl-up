@@ -1,37 +1,32 @@
 * {
-
     background-color: rgb(39, 38, 38);
-    
+    box-sizing: border-box;
 }
-
+html {
+    height: 100%;
+    margin: 0;
+}
 body {
-
+    height: 95%;
     padding: 22px;
-
-
+    margin: 0;
 }
-
 #gigaContainer {
-
     display: flex;
+    height: 90%;
     justify-content: space-between;
-    
 }
 
 h1 {
-
     display: inline;
 }
 
 h2 {
-
     margin-bottom: 15px;
     display: inline;
-
 }
 
 button {
-
     background-color: rgb(178, 156, 228);
     border: none;
     border-radius: 4px;
@@ -40,21 +35,17 @@ button {
 }
 
 button img {
-
     width: 12px;
     background-color: rgba(255, 0, 0, 0);
     color: whitesmoke;
 }
 
 #confirmTasks{
-    margin-left: 22px; 
+    margin-left: 22px;
     margin-bottom: 10px;
 }
 
 #newTaskButton {
-
-
-
     padding: 6px;
     margin-top: 8px;
     border-radius: 22px;
@@ -62,19 +53,16 @@ button img {
 }
 
 a{
-
     text-decoration: none;
     color: rgb(151, 128, 204);
 }
 
 a:hover{
-
     text-decoration: underline;
     color: rgb(151, 128, 204);
-    
 }
-.text {
 
+.text {
     color: rgb(218, 218, 218);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
@@ -82,7 +70,6 @@ a:hover{
 }
 
 .bodyText {
-
     color: rgb(218, 218, 218);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
@@ -91,16 +78,34 @@ a:hover{
 }
 
 .favouriteColor {
-
     font-size: 18px;
     margin: 18px 18px 18px 0px;
     color: rgb(185, 162, 230);
     background-color: rgba(255, 0, 0, 0);
-
 }
 
-.timesDone {
+#suggestions li {
+    background-color:  rgb(87, 79, 79);
+    padding: 10px;
+    margin: 0;
+}
 
+/* Number input */
+.amountTimes {
+    width: 90px;
+    border-radius: 10px;
+    border: none;
+    border-bottom: 2px solid rgb(100, 97, 97);
+    text-align: right;
+    padding-right: 8px;
+}
+
+input::-webkit-outer-spin-button, 
+input::-webkit-inner-spin-button {
+     margin-left: 15px; 
+} 
+
+.timesDone {
     color: rgb(218, 218, 218);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
@@ -108,7 +113,6 @@ a:hover{
 }
 
 .hugBottom {
-
     position: absolute;
     bottom: 0;
     margin: 0;
@@ -116,34 +120,26 @@ a:hover{
 
 /* Left section of web */
 #ListOfTasks {
-
     width: 55%;
-
 }
 
 .slider{
-    
     display: flex;
     position: relative;
-
 }
 
 .sliderButtons {
-
     display: flex;
-    
     margin-top: auto;
 }
 
 .taskInfo {
-
     display: flex;
     justify-content: space-between;
     padding: 0px 14px;
 }
 
 .task {
-    
     display: flex;
     justify-content: space-between;
     align-content: center;
@@ -152,11 +148,9 @@ a:hover{
     margin-top: 8px;
     border-radius: 22px;
     background-color: rgb(58, 56, 56);
-
 }
 
 #inputTask{
-
     width: 88%;
     height: 22px;
     font-size: 15px;
@@ -166,27 +160,23 @@ a:hover{
     border-bottom: 1px rgba(211, 211, 211, 0.568) solid;
 }
 
-
 /* Rigth section of web */
 #LevelAndSettings {
-
     width: 30%;
+    height: 90%;
     position: relative;
 }
 
 #LevelInfo {
-
     display: flex;
     flex-direction: column;
     padding: 12px;
     border-radius: 12px;
     justify-content: center;
     background-color: rgb(58, 56, 56);
-
 }
 
-.horizontal { 
-
+.horizontal {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -194,44 +184,40 @@ a:hover{
 }
 
 #xpBar {
-
     height: 20px;
     border-radius: 22px;
     margin-top: 26px;
     background-color: rgb(192, 187, 192);
-
 }
 
-#xpBarProgress {
-
+#xpBarUnconfirmed {
     height: 20px;
-    width: 2%;
+    width: 42%;
+    border-radius: 22px;
+    overflow: hidden ;
+    background-color: rgba(173, 75, 173, 0.5);
+}
+
+#xpBarConfirmed {
+    height: 20px;
+    width: 50%;
     border-radius: 22px;
     overflow: hidden ;
     background-color: rgb(141, 47, 141);
-    
 }
 
+
 /* Modal interface */
-
 .hidden {
-
-    opacity: 0;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
+    visibility: hidden;
 }
 
 .shown {
-
-        opacity: 100;
-        transition: all 1.5s;
-
+    visibility: visible;
+    transition: all 1.5s;
 }
 
 .modalText{
-
     color: rgb(218, 218, 218);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
@@ -242,32 +228,26 @@ a:hover{
 }
 
 #checkboxModal {
-
     margin: 0px 26px;
-
 }
 
-.modalHorizontal { 
-
+.modalHorizontal {
     display: flex;
     justify-content: center;
     background-color: inherit;
-
 }
 
 .centerModalQuestion {
     display: flex;
     flex-direction: column;
-  align-items: center;
-
+    align-items: center;
 }
-ul {
 
+ul {
     padding: 0;
 }
 
 ul li {
-
     color: whitesmoke;
     font-size: 20px;
     display: flex;
@@ -278,16 +258,14 @@ ul li {
     margin-top: 8px;
     border-radius: 22px;
     background-color: rgb(58, 56, 56);
-
 }
-#modalNewTask {
 
+#modalNewTask {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
     z-index: 10;
-
     display: flex;
     flex-direction: column;
     width: 600px;
@@ -296,22 +274,17 @@ ul li {
 }
 
 #modalHeader {
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
 }
 
 #modalBody {
-
-    display: flex;    
+    display: flex;
     flex-direction: column;
 }
 
-
 #closeButton {
-
     height: 30px;
     width: 30px;
     align-items: center;
@@ -323,26 +296,20 @@ ul li {
 }
 
 #modalButtons{
-
     display: flex;
     justify-content: right;
-
 }
 
 #modalButtons button{
-
     margin: 12px;
     margin-top: 22px;
     font-size: 16px;
     padding: 12px 18px;
-    
 }
 
 #blurBackground {
-    
     position: fixed;
     background-color: rgba(0, 0, 0, 0.541);
-
     top: 0;
     left: 0;
     right: 0;
