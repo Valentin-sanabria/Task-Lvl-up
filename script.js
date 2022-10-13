@@ -12,11 +12,14 @@ let ulDoneToday = document.getElementById("taskDoneToday");
 let ulWeekTasks = document.getElementById("ulWeekTasks");
 let allWeeklis = [];
 let tasksArrayRecommendation = [];
-let taskCreatedListStorage = [];
+let taskCreatedListStorage = JSON.parse( localStorage.getItem("task") );
+if (taskCreatedListStorage === null){
+    console.log("task vacio");
+    taskCreatedListStorage = [];
+}
 let suggestionsDiv = document.getElementById("suggestions");
 
 //Storage
-
 
 
 //Modal vars
@@ -63,18 +66,15 @@ taskInput.addEventListener("keyup", popsuggestion => {
         if((taskInput.value).length != 0){
             suggestionsDiv.innerHTML = "";
             //Filter all tasks created by making sure that, if both are lowercase, input and task recomendation are written with same letters.
-
-            tasksArrayRecommendation.forEach(task => {
-                coincidence.push( tasksArrayRecommendation.filter( () => {
-                    return task.taskName.toLowerCase().includes(taskInput.value.toLowerCase());
-                    })
+                coincidence = tasksArrayRecommendation.filter( task =>
+                    task.taskName.toLowerCase().includes(taskInput.value.toLowerCase())
                 )
-            });
-        }
+                console.log(coincidence);
     let allSugestions = coincidence.map( (item) => {
         return `<li class="bodyText">${item.taskName}</li>`;
     }).join("");
     suggestionsDiv.innerHTML = allSugestions;
+    }
 })
 
 //Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
@@ -170,9 +170,8 @@ createButton.addEventListener("click", createTask =>{
         nuevaTask.appendChild(spanPTask);
 
         //Add task created to tasks array to include in future input suggestions.
-        tasksArrayRecommendation.push(taskCreated.taskName);
+        tasksArrayRecommendation.push(taskCreated);
         taskCreatedListStorage.push(nuevaTask.outerHTML);
-        console.log(taskCreatedListStorage);
         localStorage.setItem("task", JSON.stringify(taskCreatedListStorage));
     }
 })
@@ -308,12 +307,10 @@ var liTasks = [];
 function loadtasksArrayRecommendation() {
     parsedTaskList = JSON.parse( localStorage.getItem("task") );
     if(parsedTaskList !== null){
-        console.log("beoe");
         for (var p=0; p<parsedTaskList.length ; p++){
             liTasks[p] = document.createElement("li");
             tasksAddedList.append(liTasks[p]);
             liTasks[p].outerHTML = parsedTaskList[p];
-            console.log(liTasks[p].outerHTML);
         }
     }
 }
