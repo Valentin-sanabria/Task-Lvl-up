@@ -11,7 +11,8 @@ let confirmTasks = document.getElementById("confirmTasks");
 let ulDoneToday = document.getElementById("taskDoneToday");
 let ulWeekTasks = document.getElementById("ulWeekTasks");
 let allWeeklis = [];
-let tasksCreated = [];
+let tasksArrayRecommendation = [];
+let taskCreatedListStorage = [];
 let suggestionsDiv = document.getElementById("suggestions");
 
 //Storage
@@ -45,7 +46,7 @@ taskInput.addEventListener("keypress", function(x) {
     if (x.key === 'Enter'){
         let newTask = document.createElement("p");
         newTask.outerHTML = taskInput.value;
-        ulDoneToday.append(newTask);    
+        ulDoneToday.append(newTask);
         taskInput.value = "";
     }
 
@@ -60,24 +61,19 @@ taskInput.addEventListener("keyup", popsuggestion => {
 
     let coincidence = [];
         if((taskInput.value).length != 0){
-            suggestionsDiv.innerHTML = ""; 
+            suggestionsDiv.innerHTML = "";
             //Filter all tasks created by making sure that, if both are lowercase, input and task recomendation are written with same letters.
 
-            tasksCreated.forEach(task => {
-                coincidence.push( tasksCreated.filter( () => {
+            tasksArrayRecommendation.forEach(task => {
+                coincidence.push( tasksArrayRecommendation.filter( () => {
                     return task.taskName.toLowerCase().includes(taskInput.value.toLowerCase());
                     })
                 )
-            }); 
+            });
         }
     let allSugestions = coincidence.map( (item) => {
-        console.log("DENTRO DE MAP\n");
-        console.log(item);
-        console.log(item[0].taskName);
         return `<li class="bodyText">${item.taskName}</li>`;
     }).join("");
-    // console.log(coincidence);
-    // console.log(allSugestions);
     suggestionsDiv.innerHTML = allSugestions;
 })
 
@@ -153,11 +149,9 @@ createButton.addEventListener("click", createTask =>{
         let pTask = document.createElement("p");
         let spanPTask = document.createElement("span");
         if(checkboxTimehs.checked) {
-            
             hsOrTime = "session";
         }
         if(!checkboxTimehs.checked) {
-            
             hsOrTime = "hours";
         }
 
@@ -169,16 +163,17 @@ createButton.addEventListener("click", createTask =>{
         pTask.classList.add("bodyText");
         spanPTask.classList.add("favouriteColor");
     
-        //Add vars created to their corresponding fathers, pTask and spanPTask are brothers so 
-        //Justify-content picks up both. If span appended to p wont work. 
+        //Add vars created to their corresponding fathers, pTask and spanPTask are brothers so
+        //Justify-content picks up both. If span appended to p wont work.
         tasksAddedList.appendChild(nuevaTask);
         nuevaTask.appendChild(pTask);
         nuevaTask.appendChild(spanPTask);
 
         //Add task created to tasks array to include in future input suggestions.
-        tasksCreated.push(taskCreated);
-
-        localStorage.setItem("task", JSON.stringify(taskCreated));
+        tasksArrayRecommendation.push(taskCreated.taskName);
+        taskCreatedListStorage.push(nuevaTask.outerHTML);
+        console.log(taskCreatedListStorage);
+        localStorage.setItem("task", JSON.stringify(taskCreatedListStorage));
     }
 })
 
@@ -187,7 +182,7 @@ function taskUserCreated(name, hstimes, xp) {
 
     this.taskName = name;
     this.hsOrTime = hstimes;
-    this.xpReward = xp;   
+    this.xpReward = xp;
 
 }
 //Check input respects input desired.
@@ -232,7 +227,6 @@ confirmTasks.addEventListener("click", todayToWeekly => {
         }
         element.replaceWith(inputToText);
     });
-    
 
     //Check duplicates
     for(let j of pTaskToday){
@@ -242,7 +236,7 @@ confirmTasks.addEventListener("click", todayToWeekly => {
             if ( j.innerHTML == k.innerHTML){
                 quantityAppareance++;
             }
-            
+
             if ( k.parentElement.children[1].innerHTML == ""){
 
                 k.parentElement.children[1].innerHTML == "1 time."
@@ -290,7 +284,7 @@ function saveWeekProgress() {
         amountOfTasks = ulWeekTasks.children.length;
         for (var p=0; p<amountOfTasks ; p++){
             wholeWeekList[p] = ulWeekTasks.children[p].outerHTML;
-        }    
+        }
         //Make the updated array a string and automatically save it on localStorage
         localStorage.setItem("listOfWeek", JSON.stringify(wholeWeekList) );
     }
@@ -309,4 +303,19 @@ function loadWeekProgress() {
     }
 }
 
+var parsedTaskList = [];
+var liTasks = [];
+function loadtasksArrayRecommendation() {
+    parsedTaskList = JSON.parse( localStorage.getItem("task") );
+    if(parsedTaskList !== null){
+        console.log("beoe");
+        for (var p=0; p<parsedTaskList.length ; p++){
+            liTasks[p] = document.createElement("li");
+            tasksAddedList.append(liTasks[p]);
+            liTasks[p].outerHTML = parsedTaskList[p];
+            console.log(liTasks[p].outerHTML);
+        }
+    }
+}
+loadtasksArrayRecommendation();
 loadWeekProgress();
