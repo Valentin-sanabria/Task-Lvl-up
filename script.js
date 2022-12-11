@@ -47,13 +47,10 @@ let j = 0;
 //Move task from input to today list.
 taskInput.addEventListener("keypress", function(x) {
     if (x.key === 'Enter'){
-        let newTask = document.createElement("p");
-        newTask.outerHTML = taskInput.value;
+        let newTask = document.createElement("li");
         ulDoneToday.append(newTask);
+        newTask.outerHTML = taskChosenInfo;
         taskInput.value = "";
-    }
-    if ( i === 4) {
-        i = 0;
     }
 })
 
@@ -70,10 +67,8 @@ taskInput.addEventListener("keyup", popsuggestion => {
                 return `<li class="bodyText">${item.taskName}</li>`;
             }).join("");
             suggestionsDiv.innerHTML = allSugestions;
-            console.log(suggestionsDiv.children);
             for (var i = 0; i < suggestionsDiv.children.length; i++) {
-                suggestionsDiv.children[i].setAttribute('onclick', "fillInput('"+suggestionsDiv.children[i].innerHTML+"')");
-                console.log(suggestionsDiv.children[i].innerHTML);
+                suggestionsDiv.children[i].setAttribute('onclick', "fillInput("+JSON.stringify(coincidence[i])+")");
             }
         }
         if((taskInput.value).length === 0) {
@@ -82,8 +77,12 @@ taskInput.addEventListener("keyup", popsuggestion => {
 })
 
 //Auto-fill search input based on the suggestion the user clicked.
-function fillInput(taskChosen) {
-    taskInput.value = taskChosen;
+function fillInput(taskChosenInfo) {
+    taskInput.value = "";
+    let newTask = document.createElement("li");
+    ulDoneToday.append(newTask);
+    console.log(taskChosenInfo);
+    newTask.outerHTML = '<li> <p class="taskAdded bodyText"> •'+taskChosenInfo.taskName+'</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+'+taskChosenInfo.xpReward+'</span> </li>';    ;
 }
 
 //Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
