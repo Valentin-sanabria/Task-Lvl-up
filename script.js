@@ -1,4 +1,3 @@
-
 //Main page vars
 let taskInput  = document.getElementById("inputTask");
 let taskAdded = document.querySelectorAll("p.taskAdded");
@@ -11,7 +10,11 @@ let confirmTasks = document.getElementById("confirmTasks");
 let ulDoneToday = document.getElementById("taskDoneToday");
 let ulWeekTasks = document.getElementById("ulWeekTasks");
 let allWeeklis = [];
-let tasksArrayRecommendation = [];
+let tasksArrayRecommendation = JSON.parse( localStorage.getItem("taskArrayrecommendation") );
+if (tasksArrayRecommendation === null){
+    console.log("tasks creadas vacio");
+    tasksArrayRecommendation = [];
+}
 let taskCreatedListStorage = JSON.parse( localStorage.getItem("task") );
 if (taskCreatedListStorage === null){
     console.log("task vacio");
@@ -20,7 +23,6 @@ if (taskCreatedListStorage === null){
 let suggestionsDiv = document.getElementById("suggestions");
 
 //Storage
-
 
 //Modal vars
 let modal = document.getElementById("modalNewTask");
@@ -31,7 +33,6 @@ let createButton = document.getElementById("createButton");
 let createTaskName = document.getElementById("taskName");
 let createTaskXP = document.getElementById("amountXp");
 let checkboxTimehs = document.getElementById("checkboxModal");
-
 let taskBaseXP = 0;
 let unconfirmedXPFromArray = [];
 let unconfirmedTotalXP = 0;
@@ -41,57 +42,60 @@ let currentXP = document.getElementById("totalXP");
 let i = 0;
 let j = 0;
 
-//                       XP AND TODAY FUNCTIONS
+//        XP AND TODAY FUNCTIONS
 
 //Move task from input to today list.
 taskInput.addEventListener("keypress", function(x) {
-
     if (x.key === 'Enter'){
         let newTask = document.createElement("p");
         newTask.outerHTML = taskInput.value;
         ulDoneToday.append(newTask);
         taskInput.value = "";
     }
-
-    //Reset counter so it modifies first task once again.
     if ( i === 4) {
         i = 0;
     }
 })
 
-//Pop up suggestions based on user's input.
+//Drop-down suggestions based on user's input.
 taskInput.addEventListener("keyup", popsuggestion => {
-
     let coincidence = [];
         if((taskInput.value).length != 0){
             suggestionsDiv.innerHTML = "";
             //Filter all tasks created by making sure that, if both are lowercase, input and task recomendation are written with same letters.
-                coincidence = tasksArrayRecommendation.filter( task =>
-                    task.taskName.toLowerCase().includes(taskInput.value.toLowerCase())
-                )
-                console.log(coincidence);
-    let allSugestions = coincidence.map( (item) => {
-        return `<li class="bodyText">${item.taskName}</li>`;
-    }).join("");
-    suggestionsDiv.innerHTML = allSugestions;
-    }
+            coincidence = tasksArrayRecommendation.filter( task =>
+            task.taskName.toLowerCase().includes(taskInput.value.toLowerCase())
+            )
+            let allSugestions = coincidence.map( (item) => {
+                return `<li class="bodyText">${item.taskName}</li>`;
+            }).join("");
+            suggestionsDiv.innerHTML = allSugestions;
+            console.log(suggestionsDiv.children);
+            for (var i = 0; i < suggestionsDiv.children.length; i++) {
+                suggestionsDiv.children[i].setAttribute('onclick', "fillInput('"+suggestionsDiv.children[i].innerHTML+"')");
+                console.log(suggestionsDiv.children[i].innerHTML);
+            }
+        }
+        if((taskInput.value).length === 0) {
+            suggestionsDiv.innerHTML = "";
+        }
 })
+
+//Auto-fill search input based on the suggestion the user clicked.
+function fillInput(taskChosen) {
+    taskInput.value = taskChosen;
+}
 
 //Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
 function checkLVLUP() {
-
     if (totalXP >= totalLevelXP) {
-
         mediumLVLUP();
-        
-        currentLVL.innerHTML = parseInt(currentLVL.innerHTML) + 1; 
+        currentLVL.innerHTML = parseInt(currentLVL.innerHTML) + 1;
         currentXP.innerHTML = totalXP + " / " + totalLevelXP;
-    
     }
-                                       
 }
 
-// Difficulties settings.
+// Difficulty settings.
 function easyLVLUP() {
 
     totalXP = totalXP-100;
@@ -112,7 +116,7 @@ function hardLVLUP() {
 }
 
 
-//                     MODAL FUNCTIONS
+//            MODAL FUNCTIONS
 
 //Opens modal to configure and add a new task.
 addNewTask.addEventListener("click", openModal =>{
@@ -137,14 +141,11 @@ cancelModal.addEventListener("click", closeModal =>{
 //Create task and add it to task list.
 createButton.addEventListener("click", createTask =>{
 
-    //Check inputs arent empty.
     if( createTaskName.value != '' && createTaskXP.value != ''){
-
         let inputValidation = checkInput();
         if (inputValidation == false){
             return;
         }
-
         let nuevaTask = document.createElement("li");
         let pTask = document.createElement("p");
         let spanPTask = document.createElement("span");
@@ -157,12 +158,11 @@ createButton.addEventListener("click", createTask =>{
 
         //Modify text of vars with text inputted by user. Add vars their respective classes for styling.
         const taskCreated = new taskUserCreated(createTaskName.value, hsOrTime, createTaskXP.value);
-
         pTask.innerHTML = taskCreated.taskName;
         spanPTask.innerText = "+" + taskCreated.xpReward + "xp";
         pTask.classList.add("bodyText");
         spanPTask.classList.add("favouriteColor");
-    
+
         //Add vars created to their corresponding fathers, pTask and spanPTask are brothers so
         //Justify-content picks up both. If span appended to p wont work.
         tasksAddedList.appendChild(nuevaTask);
@@ -172,43 +172,41 @@ createButton.addEventListener("click", createTask =>{
         //Add task created to tasks array to include in future input suggestions.
         tasksArrayRecommendation.push(taskCreated);
         taskCreatedListStorage.push(nuevaTask.outerHTML);
+        localStorage.setItem("taskArrayrecommendation", JSON.stringify(tasksArrayRecommendation));
         localStorage.setItem("task", JSON.stringify(taskCreatedListStorage));
     }
 })
 
-//Create objects for each user task.
+//Object structure for each user task.
 function taskUserCreated(name, hstimes, xp) {
-
     this.taskName = name;
     this.hsOrTime = hstimes;
     this.xpReward = xp;
-
 }
+
 //Check input respects input desired.
 function checkInput(){
 
     //Does not contain a-z|A-Z|spaces(\s) OR contains numbers(\d).
     if ( /^[a-zA-Z\s]*$/.test(createTaskName.value) == false ||  /\d/.test(createTaskName.value) == true){
-       alert("Task names can not contain anything that is not a letter or a whitespace.");
-       return false;
+        alert("Task names can not contain anything that is not a letter or a whitespace.");
+        return false;
     }
     //Contains anything that is NOT a number.
     else if ( /\D/.test(createTaskXP.value) == true ){
         alert("Task XP rewards can not contain anything that is not a number.")
         return false;
-     }
-    
+    }
     else {
         return true;
     }
 }
 
 
-//                    THIS WEEK/MONTH FUNCTIONS
+//        THIS WEEK/MONTH FUNCTIONS
 
 //Send today tasks to this week task list
 confirmTasks.addEventListener("click", todayToWeekly => {
-
     let allTasks = [];
     let quantityAppareance = 0;
     let itRepeated = false;
@@ -220,7 +218,6 @@ confirmTasks.addEventListener("click", todayToWeekly => {
         inputToText = document.createElement("p");
         inputToText.classList.add("bodyText");
         inputToText.innerText = element.value + " times.";
-
         if (parseInt(element.value) == 1){
             inputToText.innerText = element.value + " time.";
         }
@@ -229,30 +226,23 @@ confirmTasks.addEventListener("click", todayToWeekly => {
 
     //Check duplicates
     for(let j of pTaskToday){
-
         for(let k of pTaskWeek){
-
             if ( j.innerHTML == k.innerHTML){
                 quantityAppareance++;
             }
-
             if ( k.parentElement.children[1].innerHTML == ""){
-
                 k.parentElement.children[1].innerHTML == "1 time."
             }
-
             //Update amount of times/hours the activity was done and how much XP it has given in total.
             if (quantityAppareance > 0 &&  j.innerHTML == k.innerHTML ){
                 k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(j.parentElement.children[1].value)) + " times.";
                 k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp"; 
             }
-
             //Remove duplicate.
             if (quantityAppareance > 1 &&  j.innerHTML == k.innerHTML ){
                 k.parentElement.remove();
             }
         }
-
         if ( quantityAppareance === 0 ){
             newUniqueTask = j.parentElement.cloneNode(true);
             newUniqueTask.cl
@@ -260,10 +250,8 @@ confirmTasks.addEventListener("click", todayToWeekly => {
         }
         quantityAppareance = 0;
     }
-
     allWeeklis = document.querySelectorAll("ul#taskDoneWeek li span.taskXP");
     saveWeekProgress();
-
     addXP(allWeeklis);
 })
 

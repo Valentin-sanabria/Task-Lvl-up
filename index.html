@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="style.css">
-
     <title>Level up with tasks!</title>
 </head>
 
-
 <body>
-    
     <div id="gigaContainer">
 
-           <!-- List of today tasks and This week tasks -->
+            <!-- List of today tasks and This week tasks -->
     <div id="ListOfTasks">
 
         <div id="Today">
@@ -25,76 +20,53 @@
             <button id="confirmTasks">Confirm tasks</button>
 
             <div id="taskContainerToday">
-        
                 <input type="text" name="" id="inputTask" placeholder="What task did you do today?">
                 <div id="suggestions">
-                    <li class="bodyText">Study math</li>
-                    <li>Coded 10years</li>
                 </div>
                 <div id="divAddedTasks">
-
                     <ul id="taskDoneToday">
-
                         <li> <p class="taskAdded bodyText"> •Went to the Gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+10xp</span> </li>
                         <li> <p class="taskAdded bodyText"> •Cooked dinner</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+5xp</span> </li>
                         <li> <p class="taskAdded bodyText"> •Studied Japanese</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+100xp</span> </li>
                         <li> <p class="taskAdded bodyText"> •Coded for 2hs</p> <input class="amountTimes bodyText" type="number" min="1" value="1">  <span class="taskXP favouriteColor">+22xp</span> </li>
-                        
                     </ul>
-
                 </div>
-        
             </div>
-        
         </div>
-        
 
         <div id="ThisWeek">
-                
             <div id="taskContainerSlider">
-                
                 <div class="slider">
                     <h2 class="text">This week</h2>
-
                     <div class="sliderButtons">
                         <h3 class="bodyText"> < </h3>
                         <h3 class="bodyText"> ...</h3>
                         <h3 class="bodyText"> > </h3>
                     </div>
-                    
                 </div>
-        
+
                 <div>
                     <ul id="ulWeekTasks">
-
                     </ul>
                 </div>
-        
             </div>
-        
         </div>
-
-    </div>    
+    </div>
 
     <!-- Shows current lvl, xp progress bar and the settings of each task. -->
 
     <div id="LevelAndSettings">
-
         <div id="LevelInfo">
-
             <div class="horizontal">
                 <h1 class="text">Lvl <span id="currentLVL" class="text">1</span></h1>
                 <button>Save progress <img src="imgs/download-icon.png" alt="download-icon"></button>
             </div>
-
                 <div id="xpBar">
                     <div id="xpBarUnconfirmed">
                         <div id="xpBarConfirmed"></div>
                     </div>
                 </div>
                 <p id="totalXP" class="bodyText">240 / 727</p>
-
-
         </div>
 
             <p>----------------------</p>
@@ -104,21 +76,16 @@
                 <p class="bodyText">Task name</p>
                 <p class="bodyText">XP per hour / session</p>
             </div>
-
-           <ul id="tasksAddedList">
+            <ul id="tasksAddedList">
                 <li> <p class="bodyText"> Studied Japanese</p> <span class="favouriteColor">+10xp</span></li>
-           </ul>
-
+            </ul>
             <button id="newTaskButton"> <img src="imgs/add.png" alt="" > <span class="bodyText">Add new task</span>  </button>
             <p class="bodyText hugBottom">Coded by <a href="https://github.com/Valentin-sanabria">Valentín Sanabria</a></p>
         </div>
     </div>
-
     </div>
- 
     <div id="modalNewTask" class="hidden">
-
-        <div id="modalHeader">      
+        <div id="modalHeader">
             <h3 class="text">Create a new task</h3>
             <button id="closeButton">x</button>
         </div>
@@ -133,24 +100,18 @@
                     <p class="modalText">How much XP does the task grant?</p>
                     <input type="text" name="amountXp" id="amountXp" placeholder="Enter XP reward...">
                 </div>
-
             </div>
-
             <p class="modalText">Is this task time or session based?</p>
             <div class="modalHorizontal">
                 <p class="bodyText">Time-Based</p><input type="checkbox" name="sessionOrTime" id="checkboxModal"><p class="bodyText">Session-Based</p>
             </div>
-
         </div>
         <div id="modalButtons">
-            <button id="createButton">Create task</button> <button id="cancelButton">Cancel</button>    
+            <button id="createButton">Create task</button> <button id="cancelButton">Cancel</button>
         </div>
-
     </div>
     <div id="blurBackground" class="hidden"></div>
 
 </body>
-
 <script src="script.js"></script>
-
 </html>
