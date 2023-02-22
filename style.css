@@ -84,6 +84,11 @@ a:hover{
     background-color: rgba(255, 0, 0, 0);
 }
 
+.deleteIcon {
+    width: 3%;
+    background-color: rgb(58, 56, 56);
+}
+
 #suggestions li {
     background-color:  rgb(87, 79, 79);
     padding: 10px;
@@ -110,12 +115,6 @@ input::-webkit-inner-spin-button {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: rgba(255, 0, 0, 0);
     font-size: 19px;
-}
-
-.hugBottom {
-    position: absolute;
-    bottom: 0;
-    margin: 0;
 }
 
 /* Left section of web */

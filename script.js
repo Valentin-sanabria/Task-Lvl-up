@@ -9,6 +9,8 @@ let tasksAddedList = document.getElementById("tasksAddedList");
 let confirmTasks = document.getElementById("confirmTasks");
 let ulDoneToday = document.getElementById("taskDoneToday");
 let ulWeekTasks = document.getElementById("ulWeekTasks");
+let deleteIcon = document.querySelectorAll(".deleteIcon");
+let clickableTask = document.querySelectorAll("#taskDoneToday li");
 let allWeeklis = [];
 let tasksArrayRecommendation = JSON.parse( localStorage.getItem("taskArrayrecommendation") );
 if (tasksArrayRecommendation === null){
@@ -114,8 +116,28 @@ function hardLVLUP() {
 
 }
 
+// Delete today tasks
+deleteIcon.forEach(element => {
+    element.addEventListener("click", function(){
+        removeTaskToday(element);
+    })
+});
 
-//            MODAL FUNCTIONS
+function removeTaskToday(element){
+    console.log("PEPE");
+    element.parentElement.remove()
+}
+
+// 
+clickableTask.forEach(element => {
+    element.addEventListener("click", function(element){
+    if(String(element.target).includes("[object HTMLLIElement]")) {
+        console.log("Clickeaste");
+    }
+    })
+});
+
+//            MODAL FUNCTIONS )
 
 //Opens modal to configure and add a new task.
 addNewTask.addEventListener("click", openModal =>{
