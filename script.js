@@ -83,10 +83,12 @@ function fillInput(taskChosenInfo) {
     taskInput.value = "";
     let newTask = document.createElement("li");
     ulDoneToday.append(newTask);
-    console.log(taskChosenInfo);
-    newTask.outerHTML = '<li> <p class="taskAdded bodyText"> •'+taskChosenInfo.taskName+'</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+'+taskChosenInfo.xpReward+'xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" alt="">  </li>';    ;
+    newTask.outerHTML = '<li> <p class="taskAdded bodyText"> •'+taskChosenInfo.taskName+'</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+'+taskChosenInfo.xpReward+'xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" style="display:none" alt="">  </li>';    ;
     clickableTask = document.querySelectorAll("#taskDoneToday li");
-    assignEventListener()
+    deleteIcon = document.querySelectorAll(".deleteIcon");
+
+    assignDisplayDeleteIconEvent();
+    assignRemoveElementWhenClickEvent();
 }
 
 //Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
@@ -119,27 +121,27 @@ function hardLVLUP() {
 }
 
 // Delete today tasks
-deleteIcon.forEach(element => {
-    element.addEventListener("click", function(){
-        removeTaskToday(element);
-    })
-});
+function assignRemoveElementWhenClickEvent() {
+    deleteIcon.forEach(element => {
+        if(element.getAttribute("AlreadyHasClickListenerForDelete") !== "true") {
+            element.addEventListener("click", function() {
+                element.parentElement.classList.add("hidePRO");
+                setTimeout(() => {
+                    element.parentElement.remove()
+                }, 300);
+            })
 
-function removeTaskToday(element){
-    element.parentElement.classList.add("hidePRO");
-    setTimeout(() => {
-        element.parentElement.remove()
-    }, 300);
+            element.setAttribute("AlreadyHasClickListenerForDelete", "true");
+        }
+    });
 }
 
 // Show and hide delete icon
-function assignEventListener() {
+function assignDisplayDeleteIconEvent() {
     
     clickableTask.forEach(element => {
-        if(element.getAttribute("AlreadyHasClickListenerForDelete") !== "true") {
+        if(element.getAttribute("AlreadyHasClickListenerForButtonDisplay") !== "true") {
             element.addEventListener("click", function(element){
-                console.log(String(element.target));
-                console.log(element.target.childNodes[7].classList);
             if(String(element.target).includes("[object HTMLLIElement]")) {
                 if(element.target.childNodes[7] !== undefined){
                     if(element.target.childNodes[7].classList.contains("hidePRO")) {
@@ -158,7 +160,7 @@ function assignEventListener() {
             })
         }
 
-        element.setAttribute("AlreadyHasClickListenerForDelete", "true");
+        element.setAttribute("AlreadyHasClickListenerForButtonDisplay", "true");
     });
 }
 
