@@ -89,6 +89,24 @@ a:hover{
     background-color: rgb(58, 56, 56);
 }
 
+@keyframes slideaway {
+    from { display: block;  opacity: 1;}
+    to {  opacity: 0;}
+  }
+
+@keyframes slidein {
+    from { opacity: 0;}
+    to {  opacity: 1;}
+  }
+  
+  .hidePRO {
+    animation: slideaway 400ms;
+  }
+
+  .showPRO {
+    animation: slidein 800ms;
+  }
+
 #suggestions li {
     background-color:  rgb(87, 79, 79);
     padding: 10px;

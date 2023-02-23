@@ -124,20 +124,34 @@ deleteIcon.forEach(element => {
 });
 
 function removeTaskToday(element){
-    console.log("PEPE");
-    element.parentElement.remove()
+    element.parentElement.classList.add("hidePRO");
+    setTimeout(() => {
+        element.parentElement.remove()
+    }, 300);
 }
 
-// 
+// Show and hide delete icon
 clickableTask.forEach(element => {
     element.addEventListener("click", function(element){
     if(String(element.target).includes("[object HTMLLIElement]")) {
-        console.log("Clickeaste");
-    }
+        if(element.target.childNodes[7] !== undefined){
+            if(element.target.childNodes[7].classList.contains("hidePRO")) {
+                    element.target.childNodes[7].classList.remove("hidePRO");
+                    element.target.childNodes[7].style.display = ""
+                    element.target.childNodes[7].classList.add("showPRO");
+            } else {
+                element.target.childNodes[7].classList.remove("showPRO");
+                element.target.childNodes[7].classList.add("hidePRO");
+                setTimeout(() => {
+                    element.target.childNodes[7].style.display = "none";
+                    }, 300);
+                }
+            }
+        }
     })
 });
 
-//            MODAL FUNCTIONS )
+//            MODAL FUNCTIONS           
 
 //Opens modal to configure and add a new task.
 addNewTask.addEventListener("click", openModal =>{
