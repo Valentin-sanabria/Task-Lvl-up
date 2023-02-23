@@ -78,13 +78,15 @@ taskInput.addEventListener("keyup", popsuggestion => {
         }
 })
 
-//Auto-fill search input based on the suggestion the user clicked.
+//Auto-fill Today list based on the suggestion the user clicked.
 function fillInput(taskChosenInfo) {
     taskInput.value = "";
     let newTask = document.createElement("li");
     ulDoneToday.append(newTask);
     console.log(taskChosenInfo);
-    newTask.outerHTML = '<li> <p class="taskAdded bodyText"> •'+taskChosenInfo.taskName+'</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+'+taskChosenInfo.xpReward+'</span> </li>';    ;
+    newTask.outerHTML = '<li> <p class="taskAdded bodyText"> •'+taskChosenInfo.taskName+'</p> <input class="amountTimes bodyText" type="number" min="1" value="1"> <span class="taskXP favouriteColor">+'+taskChosenInfo.xpReward+'xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" alt="">  </li>';    ;
+    clickableTask = document.querySelectorAll("#taskDoneToday li");
+    assignEventListener()
 }
 
 //Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
@@ -131,25 +133,35 @@ function removeTaskToday(element){
 }
 
 // Show and hide delete icon
-clickableTask.forEach(element => {
-    element.addEventListener("click", function(element){
-    if(String(element.target).includes("[object HTMLLIElement]")) {
-        if(element.target.childNodes[7] !== undefined){
-            if(element.target.childNodes[7].classList.contains("hidePRO")) {
-                    element.target.childNodes[7].classList.remove("hidePRO");
-                    element.target.childNodes[7].style.display = ""
-                    element.target.childNodes[7].classList.add("showPRO");
-            } else {
-                element.target.childNodes[7].classList.remove("showPRO");
-                element.target.childNodes[7].classList.add("hidePRO");
-                setTimeout(() => {
-                    element.target.childNodes[7].style.display = "none";
-                    }, 300);
+function assignEventListener() {
+    
+    clickableTask.forEach(element => {
+        if(element.getAttribute("AlreadyHasClickListenerForDelete") !== "true") {
+            element.addEventListener("click", function(element){
+                console.log(String(element.target));
+                console.log(element.target.childNodes[7].classList);
+            if(String(element.target).includes("[object HTMLLIElement]")) {
+                if(element.target.childNodes[7] !== undefined){
+                    if(element.target.childNodes[7].classList.contains("hidePRO")) {
+                            element.target.childNodes[7].classList.remove("hidePRO");
+                            element.target.childNodes[7].style.display = "";
+                            element.target.childNodes[7].classList.add("showPRO");
+                    } else if(element.target.childNodes[7].classList.contains("showPRO")) {
+                        element.target.childNodes[7].classList.remove("showPRO");
+                        element.target.childNodes[7].classList.add("hidePRO");
+                        setTimeout(() => {
+                            element.target.childNodes[7].style.display = "none";
+                            }, 300);
+                        }
+                    }
                 }
-            }
+            })
         }
-    })
-});
+
+        element.setAttribute("AlreadyHasClickListenerForDelete", "true");
+    });
+}
+
 
 //            MODAL FUNCTIONS           
 
