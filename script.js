@@ -294,7 +294,9 @@ confirmTasks.addEventListener("click", todayToWeekly => {
         }
         if ( quantityAppareance === 0 ){
             newUniqueTask = j.parentElement.cloneNode(true);
-            newUniqueTask.cl
+            if(newUniqueTask.children.length !== 3) {
+                newUniqueTask.children[3].remove();
+            }
             ulWeekTasks.append(newUniqueTask);
         }
         quantityAppareance = 0;
@@ -308,9 +310,9 @@ confirmTasks.addEventListener("click", todayToWeekly => {
 //Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
 function addXP(li) {
     li.forEach(function sumXP() {
+        currentXP.innerHTML = totalXP + " / " + totalLevelXP;
+        checkLVLUP();
     })
-    currentXP.innerHTML = totalXP + " / " + totalLevelXP;
-    checkLVLUP();
 }
 
 var amountOfTasks = "";
