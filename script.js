@@ -9,6 +9,8 @@ let tasksAddedList = document.getElementById("tasksAddedList");
 let confirmTasks = document.getElementById("confirmTasks");
 let ulDoneToday = document.getElementById("taskDoneToday");
 let ulWeekTasks = document.getElementById("ulWeekTasks");
+let ulTodayTasks = document.getElementById("ulTodayTasks");
+let ulYearTasks = document.getElementById("ulYearTasks");
 let deleteIcon = document.querySelectorAll(".deleteIcon");
 let clickableTask = document.querySelectorAll("#taskDoneToday li");
 let allWeeklis = [];
@@ -254,11 +256,16 @@ function checkInput(){
 
 //        THIS WEEK/MONTH FUNCTIONS
 
+
+//ESTO SE QUEDA ASI, PQ SIEMPRE TIENE QUE IR DE TODAY A WEEKLY, DE HECHO HAY QUE AGREGAR PARA QUE TAMBIEN SE SUME
+//AUTOMATICAMENTE EN ULTODAY Y ULYEAR PQ LO UNICO QUE VA A HACER EL FILTER ES SACARLAS DE TODAY Y DE THIS WEEK
+//POR ENDE EL FILTER SE USA EN LA FUNCION LOAD. ESA INFO QUE TRAEMOS DEL LOCALSTORAGE ES LA QUE HAY QUE POSTERIORMENTE
+//FILTRAR Y ORDENAR. HAY QUE ASEGURAR QUE CUANDO GUARDAMOS EN LOCALSTORAGE QUE SE INCLUYA LA FECHA DENTRO DEL STRING
+//CUANDO LAS TASKS SON CREADAS NUEVAS DESDE 0 ES LOGICO QUE LA FECHA COINCIDE CON LA DE HOY, LA DE ESTA SEMANA, Y LA DE ESTE AÑO.
+
 //Send today tasks to this week task list
 confirmTasks.addEventListener("click", todayToWeekly => {
-    let allTasks = [];
     let quantityAppareance = 0;
-    let itRepeated = false;
     let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
     let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
     let timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
@@ -285,7 +292,7 @@ confirmTasks.addEventListener("click", todayToWeekly => {
             //Update amount of times/hours the activity was done and how much XP it has given in total.
             if (quantityAppareance > 0 &&  j.innerHTML == k.innerHTML ){
                 k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(j.parentElement.children[1].value)) + " times.";
-                k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp"; 
+                k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
             }
             //Remove duplicate.
             if (quantityAppareance > 1 &&  j.innerHTML == k.innerHTML ){
@@ -294,8 +301,11 @@ confirmTasks.addEventListener("click", todayToWeekly => {
         }
         if ( quantityAppareance === 0 ){
             newUniqueTask = j.parentElement.cloneNode(true);
-            newUniqueTask.cl
+            currentDate = document.createElement("p");
+            currentDate.innerText = getTodayDate();
+            newUniqueTask.append(currentDate);
             ulWeekTasks.append(newUniqueTask);
+
         }
         quantityAppareance = 0;
     }
@@ -304,6 +314,16 @@ confirmTasks.addEventListener("click", todayToWeekly => {
     addXP(allWeeklis);
 })
 
+//Decide in which UL should the LI append itself to depending on its creation date.
+function filterLIByDate(currentLI) {
+    if( currentLI.children[3].innerText === getTodayDate() ) {
+        todayUL.append(currentLI);
+    } else if ( isThisWeek(currentLI.children[3].innerText))  {
+        ulWeekTasks.append(currentLI);
+    } else {
+        yearUL.append(currentLI);
+    }
+}
 
 //Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
 function addXP(li) {
@@ -353,3 +373,32 @@ function loadtasksArrayRecommendation() {
 }
 loadtasksArrayRecommendation();
 loadWeekProgress();
+
+
+
+function getTodayDate() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+
+    return today = dd + '/' + mm + '/' + yyyy;
+}
+
+function isThisWeek(date) {
+    const thisWeek = new Date();
+    thisWeek.setDate(thisWeek.getDate() - 7);
+    var dd = String(thisWeek.getDate()).padStart(2, '0');
+    var mm = String(thisWeek.getMonth() + 1).padStart(2, '0');
+    var yyyy = thisWeek.getFullYear();
+    thisWeek = dd + '/' + mm + '/' + yyyy;
+
+    if (date > thisWeek ) {
+        return true;
+    } else
+    return false;
+}
+
+//BORRAR
+let pijapijapija = document.getElementById("PIAJPIJAPIJA");
+pijapijapija.innerText =  getTodayDate()
