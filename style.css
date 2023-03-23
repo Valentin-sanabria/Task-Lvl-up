@@ -107,6 +107,9 @@ a:hover{
     animation: slidein 800ms;
   }
 
+  .hide {
+    /* display: none; */
+  }
 #suggestions li {
     background-color:  rgb(87, 79, 79);
     padding: 10px;

@@ -9,6 +9,8 @@ let tasksAddedList = document.getElementById("tasksAddedList");
 let confirmTasks = document.getElementById("confirmTasks");
 let ulDoneToday = document.getElementById("taskDoneToday");
 let ulWeekTasks = document.getElementById("ulWeekTasks");
+let ulMonthTasks = document.getElementById("ulMonthTasks");
+let ulYearTasks = document.getElementById("ulYearTasks");
 let deleteIcon = document.querySelectorAll(".deleteIcon");
 let clickableTask = document.querySelectorAll("#taskDoneToday li");
 let allWeeklis = [];
@@ -254,11 +256,20 @@ function checkInput(){
 
 //        THIS WEEK/MONTH FUNCTIONS
 
+
+//ESTO SE QUEDA ASI, PQ SIEMPRE TIENE QUE IR DE TODAY A WEEKLY, DE HECHO HAY QUE AGREGAR PARA QUE TAMBIEN SE SUME
+//AUTOMATICAMENTE EN ULTODAY Y ULYEAR PQ LO UNICO QUE VA A HACER EL FILTER ES SACARLAS DE TODAY Y DE THIS WEEK
+//POR ENDE EL FILTER SE USA EN LA FUNCION LOAD. ESA INFO QUE TRAEMOS DEL LOCALSTORAGE ES LA QUE HAY QUE POSTERIORMENTE
+//FILTRAR Y ORDENAR. HAY QUE ASEGURAR QUE CUANDO GUARDAMOS EN LOCALSTORAGE QUE SE INCLUYA LA FECHA DENTRO DEL STRING
+//CUANDO LAS TASKS SON CREADAS NUEVAS DESDE 0 ES LOGICO QUE LA FECHA COINCIDE CON LA DE HOY, LA DE ESTA SEMANA, Y LA DE ESTE AÑO.
+//PERO NO ES LOGICO QUE COINCIDAN CUANDO LA TASKS YA FUE CREADA PREVIAMENTE.
+
 //Send today tasks to this week task list
-confirmTasks.addEventListener("click", todayToWeekly => {
-    let allTasks = [];
+confirmTasks.addEventListener("click", todayToWeekly2 => {
+    todayToWeekly()
+})
+function todayToWeekly() {
     let quantityAppareance = 0;
-    let itRepeated = false;
     let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
     let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
     let timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
@@ -279,13 +290,14 @@ confirmTasks.addEventListener("click", todayToWeekly => {
             if ( j.innerHTML == k.innerHTML){
                 quantityAppareance++;
             }
+
             if ( k.parentElement.children[1].innerHTML == ""){
                 k.parentElement.children[1].innerHTML == "1 time."
             }
             //Update amount of times/hours the activity was done and how much XP it has given in total.
             if (quantityAppareance > 0 &&  j.innerHTML == k.innerHTML ){
                 k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(j.parentElement.children[1].value)) + " times.";
-                k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp"; 
+                k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
             }
             //Remove duplicate.
             if (quantityAppareance > 1 &&  j.innerHTML == k.innerHTML ){
@@ -297,15 +309,128 @@ confirmTasks.addEventListener("click", todayToWeekly => {
             if(newUniqueTask.children.length !== 3) {
                 newUniqueTask.children[3].remove();
             }
+            currentDate = document.createElement("p");
+            currentDate.innerText = getTodayDate();
+            currentDate.classList.add("hide");
+            newUniqueTask.append(currentDate);
             ulWeekTasks.append(newUniqueTask);
+
         }
         quantityAppareance = 0;
     }
     allWeeklis = document.querySelectorAll("ul#taskDoneWeek li span.taskXP");
     saveWeekProgress();
     addXP(allWeeklis);
-})
+    todayToMonthly();
+    todayToYearly();
+}
 
+//Send today tasks to this month task list
+function todayToMonthly() {
+    let quantityAppareance = 0;
+    let pTaskMonth = document.querySelectorAll("ul#ulMonthTasks li p.taskAdded");
+    let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
+    let timesTaskMonth = document.querySelectorAll("ul#ulMonthTasks li input.amountTimes");
+
+    timesTaskMonth.forEach(element => {
+        inputToText = document.createElement("p");
+        inputToText.classList.add("bodyText");
+        inputToText.innerText = element.value + " times.";
+        if (parseInt(element.value) == 1){
+            inputToText.innerText = element.value + " time.";
+        }
+        element.replaceWith(inputToText);
+    });
+
+    //Check duplicates
+    for(let j of pTaskToday){
+        for(let k of pTaskMonth){
+            if ( j.innerHTML == k.innerHTML){
+                quantityAppareance++;
+            }
+
+            if ( k.parentElement.children[1].innerHTML == ""){
+                k.parentElement.children[1].innerHTML == "1 time."
+            }
+            //Update amount of times/hours the activity was done and how much XP it has given in total.
+            if (quantityAppareance > 0 &&  j.innerHTML == k.innerHTML ){
+                k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(j.parentElement.children[1].value)) + " times.";
+                k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
+            }
+            //Remove duplicate.
+            if (quantityAppareance > 1 &&  j.innerHTML == k.innerHTML ){
+                k.parentElement.remove();
+            }
+        }
+        if ( quantityAppareance === 0 ){
+            newUniqueTask = j.parentElement.cloneNode(true);
+            if(newUniqueTask.children.length !== 3) {
+                newUniqueTask.children[3].remove();
+            }
+            currentDate = document.createElement("p");
+            currentDate.innerText = getTodayDate();
+            currentDate.classList.add("hide");
+            newUniqueTask.append(currentDate);
+            ulMonthTasks.append(newUniqueTask);
+
+        }
+        quantityAppareance = 0;
+    }
+    saveWeekProgress();
+}
+
+function todayToYearly() {
+    let quantityAppareance = 0;
+    let pTaskYear = document.querySelectorAll("ul#ulYearTasks li p.taskAdded");
+    let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
+    let timesTaskYear = document.querySelectorAll("ul#ulYearTasks li input.amountTimes");
+
+    timesTaskYear.forEach(element => {
+        inputToText = document.createElement("p");
+        inputToText.classList.add("bodyText");
+        inputToText.innerText = element.value + " times.";
+        if (parseInt(element.value) == 1){
+            inputToText.innerText = element.value + " time.";
+        }
+        element.replaceWith(inputToText);
+    });
+
+    //Check duplicates
+    for(let j of pTaskToday){
+        for(let k of pTaskYear){
+            if ( j.innerHTML == k.innerHTML){
+                quantityAppareance++;
+            }
+
+            if ( k.parentElement.children[1].innerHTML == ""){
+                k.parentElement.children[1].innerHTML == "1 time."
+            }
+            //Update amount of times/hours the activity was done and how much XP it has given in total.
+            if (quantityAppareance > 0 &&  j.innerHTML == k.innerHTML ){
+                k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(j.parentElement.children[1].value)) + " times.";
+                k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
+            }
+            //Remove duplicate.
+            if (quantityAppareance > 1 &&  j.innerHTML == k.innerHTML ){
+                k.parentElement.remove();
+            }
+        }
+        if ( quantityAppareance === 0 ){
+            newUniqueTask = j.parentElement.cloneNode(true);
+            if(newUniqueTask.children.length !== 3) {
+                newUniqueTask.children[3].remove();
+            }
+            let currentDate = document.createElement("p");
+            currentDate.innerText = getTodayDate();
+            currentDate.classList.add("hide");
+            newUniqueTask.append(currentDate);
+            ulYearTasks.append(newUniqueTask);
+
+        }
+        quantityAppareance = 0;
+    }
+    saveWeekProgress();
+}
 
 //Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
 function addXP(li) {
@@ -315,28 +440,143 @@ function addXP(li) {
     })
 }
 
-var amountOfTasks = "";
-var wholeWeekList = [];
+function storageToWeekly(currentLI) {
+    let quantityAppareance = 0;
+    let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
+    for(let k of pTaskWeek){
+        if ( currentLI.children[0].innerHTML == k.innerHTML){
+            quantityAppareance++;
+        }
+
+        if ( k.parentElement.children[1].innerHTML == ""){
+            k.parentElement.children[1].innerHTML == "1 time."
+        }
+        //Update amount of times/hours the activity was done and how much XP it has given in total.
+        if (quantityAppareance > 0 && currentLI.children[0].innerHTML == k.innerHTML ){
+            k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(currentLI.children[0].parentElement.children[1].value)) + " times.";
+            k.parentElement.children[2].innerHTML = "+" + ( parseInt(currentLI.children[0].parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
+        }
+        //Remove duplicate.
+        if (quantityAppareance > 1 &&  currentLI.children[0].innerHTML == k.innerHTML ){
+            k.parentElement.remove();
+        }
+    }
+    if ( quantityAppareance === 0 ){
+        // if(newUniqueTask.children.length !== 3) {
+        //     newUniqueTask.children[3].remove();
+        // }
+        let clonedLI = currentLI.cloneNode(true)
+        ulWeekTasks.append(clonedLI);
+    }
+    quantityAppareance = 0;
+}
+
+function storageToMonthly(currentLI) {
+    let quantityAppareance = 0;
+    let pTaskMonth= document.querySelectorAll("ul#ulMonthTasks li p.taskAdded");
+    for(let k of pTaskMonth){
+        if ( currentLI.children[0].innerHTML == k.innerHTML){
+            quantityAppareance++;
+        }
+
+        if ( k.parentElement.children[1].innerHTML == ""){
+            k.parentElement.children[1].innerHTML == "1 time."
+        }
+        //Update amount of times/hours the activity was done and how much XP it has given in total.
+        if (quantityAppareance > 0 && currentLI.children[0].innerHTML == k.innerHTML ){
+            k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(currentLI.children[0].parentElement.children[1].value)) + " times.";
+            k.parentElement.children[2].innerHTML = "+" + ( parseInt(currentLI.children[0].parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
+        }
+        //Remove duplicate.
+        if (quantityAppareance > 1 &&  currentLI.children[0].innerHTML == k.innerHTML ){
+            k.parentElement.remove();
+        }
+    }
+    if ( quantityAppareance === 0 ){
+        // if(newUniqueTask.children.length !== 3) {
+        //     newUniqueTask.children[3].remove();
+        // }
+        let clonedLI = currentLI.cloneNode(true)
+        ulMonthTasks.append(clonedLI);
+    }
+    quantityAppareance = 0;
+}
+
+function storageToYearly(currentLI) {
+    let quantityAppareance = 0;
+    let pTaskYear= document.querySelectorAll("ul#ulYearTasks li p.taskAdded");
+    for(let k of pTaskYear){
+        if ( currentLI.children[0].innerHTML == k.innerHTML){
+            quantityAppareance++;
+        }
+
+        if ( k.parentElement.children[1].innerHTML == ""){
+            k.parentElement.children[1].innerHTML == "1 time."
+        }
+        //Update amount of times/hours the activity was done and how much XP it has given in total.
+        if (quantityAppareance > 0 && currentLI.children[0].innerHTML == k.innerHTML ){
+            k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(currentLI.children[0].parentElement.children[1].value)) + " times.";
+            k.parentElement.children[2].innerHTML = "+" + ( parseInt(currentLI.children[0].parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
+        }
+        //Remove duplicate.
+        if (quantityAppareance > 1 &&  currentLI.children[0].innerHTML == k.innerHTML ){
+            k.parentElement.remove();
+        }
+    }
+    if ( quantityAppareance === 0 ){
+        // if(newUniqueTask.children.length !== 3) {
+        //     newUniqueTask.children[3].remove();
+        // }
+        let clonedLI = currentLI.cloneNode(true)
+        ulYearTasks.append(clonedLI);
+    }
+    quantityAppareance = 0;
+}
+
+var amountOfTasks;
+var allTasksDoneEver = [];
 function saveWeekProgress() {
-    if(ulWeekTasks !== null) {
-        amountOfTasks = ulWeekTasks.children.length;
+    allTasksDoneEver = JSON.parse(localStorage.getItem("listOfAllTasksDoneEver"));
+    if(allTasksDoneEver === null) {
+        allTasksDoneEver = [];
+    }
+    if(allTasksDoneEver !== null) {
+        amountOfTasks = ulYearTasks.children.length;
         for (var p=0; p<amountOfTasks ; p++){
-            wholeWeekList[p] = ulWeekTasks.children[p].outerHTML;
+            allTasksDoneEver[p] = (ulYearTasks.children[p].outerHTML);
+            
         }
         //Make the updated array a string and automatically save it on localStorage
-        localStorage.setItem("listOfWeek", JSON.stringify(wholeWeekList) );
+         localStorage.setItem("listOfAllTasksDoneEver", JSON.stringify(allTasksDoneEver) );
+    }
+}
+
+//Decide in which UL should the LI append itself to depending on its creation date.
+function filterLIByDate(currentLI) {
+    if( isThisWeek(currentLI.children[0].children[1].children[0].children[3].innerText) ) {
+        storageToWeekly(currentLI.children[0].children[1].children[0]);
+        storageToMonthly(currentLI.children[0].children[1].children[0]);
+        storageToYearly(currentLI.children[0].children[1].children[0]);
+    } else if ( isThisMonth(currentLI.children[0].children[1].children[0].children[3].innerText) )  {
+        storageToMonthly(currentLI.children[0].children[1].children[0]);
+        storageToYearly(currentLI.children[0].children[1].children[0]);
+    } else {
+        storageToYearly(currentLI.children[0].children[1].children[0]);
     }
 }
 
 var parsedWeekList = [];
 var liWeek = [];
 function loadWeekProgress() {
-    parsedWeekList = JSON.parse( localStorage.getItem("listOfWeek") );
+    parsedWeekList = JSON.parse( localStorage.getItem("listOfAllTasksDoneEver") );
+    let parser = new DOMParser();
     if(parsedWeekList !== null){
         for (var p=0; p<parsedWeekList.length ; p++){
-            liWeek[p] = document.createElement("li");
-            ulWeekTasks.append(liWeek[p]);
-            liWeek[p].outerHTML = parsedWeekList[p];
+            filterLIByDate(parser.parseFromString(parsedWeekList[p], "text/html"));
+            // ES UNA STRING Y NECESITO ACCEDER A LOS CHILDREN.
+            // liWeek[p] = document.createElement("li");
+            // ulWeekTasks.append(liWeek[p]);
+            // liWeek[p].outerHTML = parsedWeekList[p];
         }
     }
 }
@@ -355,3 +595,74 @@ function loadtasksArrayRecommendation() {
 }
 loadtasksArrayRecommendation();
 loadWeekProgress();
+
+
+
+function getTodayDate() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+
+    return today = dd + '/' + mm + '/' + yyyy;
+}
+
+function isThisWeek(date) {
+    let thisWeek = new Date();
+    thisWeek.setDate(thisWeek.getDate() - 7);
+    var dd = String(thisWeek.getDate()).padStart(2, '0');
+    var mm = String(thisWeek.getMonth() + 1).padStart(2, '0');
+    var yyyy = thisWeek.getFullYear();
+    thisWeek = dd + '/' + mm + '/' + yyyy;
+
+    if (date > thisWeek ) {
+        return true;
+    } else
+    return false;
+}
+
+function isThisMonth(date) {
+    let thisMonth = new Date();
+    let mm = String(thisMonth.getMonth() + 1).padStart(2, '0');
+    let substring = date.substring(3,5);
+
+    if (substring === mm ) {
+        return true;
+    } else
+    return false;
+}
+
+            //CHECK IF SOMETHING IS TIME TASK OR SESSION TASK. WIP HAY QUE SEGUIRLO
+            // let foundTask;
+            // let parsedJSON;
+            // console.log(JSON.parse(localStorage.getItem("taskArrayrecommendation")));
+            // parsedJSON = JSON.parse(localStorage.getItem("taskArrayrecommendation"));
+            // foundTask = parsedJSON.filter(task =>{
+            //     console.log("el localstorage es: ", task.taskName);
+            //     console.log("el nombre es: ", k.parentElement.children[0].innerText);
+            //     return task.taskName === k.parentElement.children[0].innerText; //ACA HACER SUBSTRING PORQ SE INCLUYE EL • EN EL STRING Y NO SON ===
+            //     // if(task.taskName === k.parentElement.children[0].innerText) {
+            //     //     return task
+            //     // }
+            //     }
+            // )
+            // console.log(foundTask);
+            // console.log(foundTask[0], " ES SESSION");
+            // if(foundTask[0].hsOrTime === "session" ) {
+            //     console.log(foundTask);
+            //     console.log(foundTask[0], " ES SESSION");
+            // } else if (filter.hsOrTime === time) {
+            //     console.log(foundTask);
+            //     console.log(foundTask[0], " ES TIME");
+            // }
+
+
+            /*
+            IDEAS PARA OPTIMIZAR EL CODIGO?
+            NO ES NECESARIO CREARLO UNA VEZ EN CADA DIV, DEBERIA DE PODER CREARLO SOLO EN EL DIV SEMANAL, GUARDAR ESO EN EL 
+            LOCALSTORAGE Y ATUOMATICAMENTE CORRER EL FILTER. ESO VA A HACER QUE AUTOMATICAMENTE SE LLENE EN MONTHLY Y YEARLY POR
+            LA FECHA. Y EVITARIA REPETIR TANTO EL CODIGO, ADEMAS, LA FUNCION QUE SE ENCARGA DE TRAER LOS LI DEL LOCALSTORAGE AL
+            DOM Y HACERLES APPEND AL DIV CORRESPONDIENTE PODRIA SER UNA UNICA FUNCION CUSTOMIZABLE CON PARAMETROS, PARA NO TENER
+            3 FUNCIONES DIFERENTES PARA CADA DIV. EVITANDO ASI NUEVAMENTE LA REPETICION.
+
+            */
