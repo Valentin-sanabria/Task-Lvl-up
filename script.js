@@ -167,7 +167,7 @@ function assignDisplayDeleteIconEvent() {
 }
 
 
-//            MODAL FUNCTIONS           
+//            MODAL FUNCTIONS
 
 //Opens modal to configure and add a new task.
 addNewTask.addEventListener("click", openModal =>{
@@ -229,10 +229,11 @@ createButton.addEventListener("click", createTask =>{
 })
 
 //Object structure for each user task.
-function taskUserCreated(name, hstimes, xp) {
+function taskUserCreated(name, hstimes, xp, creationDate) {
     this.taskName = name;
     this.hsOrTime = hstimes;
     this.xpReward = xp;
+    this.creationDate = creationDate;
 }
 
 //Check input respects input desired.
@@ -268,21 +269,45 @@ function checkInput(){
 confirmTasks.addEventListener("click", todayToWeekly2 => {
     todayToWeekly()
 })
+
+function outerHtmlToObject(outerHtmlString) {
+    let taskName = outerHtmlString.substring(outerHtmlString.indexOf("•"),outerHtmlString.indexOf("<", outerHtmlString.indexOf("•") ));
+    let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+"),outerHtmlString.indexOf("<", outerHtmlString.indexOf("+") ));
+    let taskCreationDate = getTodayDate();
+    const taskAsObject = new taskUserCreated();
+
+    Object.defineProperties(taskAsObject, {
+        taskName: {
+            value: taskName
+        },
+        xpReward: {
+            value: taskXP
+        },
+        creationDate: {
+            value: taskCreationDate
+        }
+    });
+    return taskAsObject
+}
+
+allTasksDone = [];
+function checkIfTaskHasBeenDoneAlready() {
+    if(allTasksDone[i][0].taskName.includes(todayTaskLI.children[0].innterText.substring(1))) {
+        //aca hay que hacer array bidimensional y pushearle el nuevo objeto creado a la posicion que contiene el mismo nombre de task
+        allTasksDone[i].push(todayTaskLI.children[0].innterText.substring(1))
+    }
+    else if(!allTasksDone[i][0].taskName.includes(todayTaskLI.children[0].innterText.substring(1))) {
+        let newTaskArray = [todayTaskLI.children[0].innterText.substring(1)]
+        allTasksDone.push(newTaskArray);
+    }
+}
+
 function todayToWeekly() {
     let quantityAppareance = 0;
     let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
     let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
     let timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
 
-    timesTaskWeek.forEach(element => {
-        inputToText = document.createElement("p");
-        inputToText.classList.add("bodyText");
-        inputToText.innerText = element.value + " times.";
-        if (parseInt(element.value) == 1){
-            inputToText.innerText = element.value + " time.";
-        }
-        element.replaceWith(inputToText);
-    });
 
     //Check duplicates
     for(let j of pTaskToday){
@@ -319,6 +344,17 @@ function todayToWeekly() {
         quantityAppareance = 0;
     }
     allWeeklis = document.querySelectorAll("ul#taskDoneWeek li span.taskXP");
+    timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
+    timesTaskWeek.forEach(element => {
+        inputToText = document.createElement("p");
+        inputToText.classList.add("bodyText");
+        inputToText.innerText = element.value + " times.";
+        if (parseInt(element.value) == 1){
+            inputToText.innerText = element.value + " time.";
+        }
+        element.replaceWith(inputToText);
+    });
+
     saveWeekProgress();
     addXP(allWeeklis);
     todayToMonthly();
@@ -330,17 +366,6 @@ function todayToMonthly() {
     let quantityAppareance = 0;
     let pTaskMonth = document.querySelectorAll("ul#ulMonthTasks li p.taskAdded");
     let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
-    let timesTaskMonth = document.querySelectorAll("ul#ulMonthTasks li input.amountTimes");
-
-    timesTaskMonth.forEach(element => {
-        inputToText = document.createElement("p");
-        inputToText.classList.add("bodyText");
-        inputToText.innerText = element.value + " times.";
-        if (parseInt(element.value) == 1){
-            inputToText.innerText = element.value + " time.";
-        }
-        element.replaceWith(inputToText);
-    });
 
     //Check duplicates
     for(let j of pTaskToday){
@@ -376,16 +401,9 @@ function todayToMonthly() {
         }
         quantityAppareance = 0;
     }
-    saveWeekProgress();
-}
 
-function todayToYearly() {
-    let quantityAppareance = 0;
-    let pTaskYear = document.querySelectorAll("ul#ulYearTasks li p.taskAdded");
-    let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
-    let timesTaskYear = document.querySelectorAll("ul#ulYearTasks li input.amountTimes");
-
-    timesTaskYear.forEach(element => {
+    let timesTaskMonth = document.querySelectorAll("ul#ulMonthTasks li input.amountTimes");
+    timesTaskMonth.forEach(element => {
         inputToText = document.createElement("p");
         inputToText.classList.add("bodyText");
         inputToText.innerText = element.value + " times.";
@@ -394,6 +412,13 @@ function todayToYearly() {
         }
         element.replaceWith(inputToText);
     });
+    saveWeekProgress();
+}
+
+function todayToYearly() {
+    let quantityAppareance = 0;
+    let pTaskYear = document.querySelectorAll("ul#ulYearTasks li p.taskAdded");
+    let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
 
     //Check duplicates
     for(let j of pTaskToday){
@@ -421,7 +446,7 @@ function todayToYearly() {
                 newUniqueTask.children[3].remove();
             }
             let currentDate = document.createElement("p");
-            currentDate.innerText = getTodayDate();
+            currentDate.innerText = "05/03/2023";
             currentDate.classList.add("hide");
             newUniqueTask.append(currentDate);
             ulYearTasks.append(newUniqueTask);
@@ -429,6 +454,16 @@ function todayToYearly() {
         }
         quantityAppareance = 0;
     }
+    let timesTaskYear = document.querySelectorAll("ul#ulYearTasks li input.amountTimes");
+    timesTaskYear.forEach(element => {
+        inputToText = document.createElement("p");
+        inputToText.classList.add("bodyText");
+        inputToText.innerText = element.value + " times.";
+        if (parseInt(element.value) == 1){
+            inputToText.innerText = element.value + " time.";
+        }
+        element.replaceWith(inputToText);
+    });
     saveWeekProgress();
 }
 
