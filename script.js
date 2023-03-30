@@ -271,8 +271,8 @@ confirmTasks.addEventListener("click", todayToWeekly2 => {
 })
 
 function outerHtmlToObject(outerHtmlString) {
-    let taskName = outerHtmlString.substring(outerHtmlString.indexOf("•"),outerHtmlString.indexOf("<", outerHtmlString.indexOf("•") ));
-    let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+"),outerHtmlString.indexOf("<", outerHtmlString.indexOf("+") ));
+    let taskName = outerHtmlString.substring(outerHtmlString.indexOf("•")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("•") ));
+    let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("+") ));
     let taskCreationDate = getTodayDate();
     const taskAsObject = new taskUserCreated();
 
@@ -287,20 +287,42 @@ function outerHtmlToObject(outerHtmlString) {
             value: taskCreationDate
         }
     });
+    console.log("EL OBJETO SACADO DEL OUTERHTML ES: ", taskAsObject);
     return taskAsObject
 }
 
-allTasksDone = [];
-function checkIfTaskHasBeenDoneAlready() {
-    if(allTasksDone[i][0].taskName.includes(todayTaskLI.children[0].innterText.substring(1))) {
-        //aca hay que hacer array bidimensional y pushearle el nuevo objeto creado a la posicion que contiene el mismo nombre de task
-        allTasksDone[i].push(todayTaskLI.children[0].innterText.substring(1))
+allTasksDone = [[]];
+console.log(allTasksDone);
+function checkIfTaskHasBeenDoneAlready(todayTaskLI) {
+    let arrayLength = allTasksDone.length
+    for(let i=0;i<arrayLength;i++){
+        if(allTasksDone[0][0] == undefined) {
+            console.log("entro")
+            let newTaskArray = [todayTaskLI];
+            allTasksDone[0][0] = newTaskArray;
+            console.log(allTasksDone);
+            console.log(allTasksDone[0][0].taskName);
+        }
+        else if(allTasksDone[i][0].taskName.includes(todayTaskLI.taskName)) {
+            console.log("entro al que se supone");
+            allTasksDone[i].push(todayTaskLI)
+
+        }
+        else if(!allTasksDone[i][0].taskName.includes(todayTaskLI.taskName)) {
+            console.log("entro al que NO se supone");
+            let newTaskArray = [todayTaskLI];
+            allTasksDone.push(newTaskArray);
+
+        }
     }
-    else if(!allTasksDone[i][0].taskName.includes(todayTaskLI.children[0].innterText.substring(1))) {
-        let newTaskArray = [todayTaskLI.children[0].innterText.substring(1)]
-        allTasksDone.push(newTaskArray);
-    }
+    
 }
+
+checkIfTaskHasBeenDoneAlready( outerHtmlToObject(  `<p class="taskAdded bodyText"> •Go to the gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1" fdprocessedid="0m7xxh"> <span class="taskXP favouriteColor">+222xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" style="display:none" alt="" alreadyhasclicklistenerfordelete="true">`   ) )
+checkIfTaskHasBeenDoneAlready( outerHtmlToObject(  `<p class="taskAdded bodyText"> •Go to the gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1" fdprocessedid="0m7xxh"> <span class="taskXP favouriteColor">+222xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" style="display:none" alt="" alreadyhasclicklistenerfordelete="true">`   ) )
+console.log(allTasksDone);
+
+
 
 function todayToWeekly() {
     let quantityAppareance = 0;
@@ -632,7 +654,6 @@ loadtasksArrayRecommendation();
 loadWeekProgress();
 
 
-
 function getTodayDate() {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -641,6 +662,28 @@ function getTodayDate() {
 
     return today = dd + '/' + mm + '/' + yyyy;
 }
+
+function outerHtmlToObject(outerHtmlString) {
+    let taskName = outerHtmlString.substring(outerHtmlString.indexOf("•")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("•") ));
+    let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("+") ));
+    let taskCreationDate = getTodayDate();
+    const taskAsObject = new taskUserCreated();
+
+    Object.defineProperties(taskAsObject, {
+        taskName: {
+            value: taskName
+        },
+        xpReward: {
+            value: taskXP
+        },
+        creationDate: {
+            value: taskCreationDate
+        }
+    });
+    console.log("EL OBJETO SACADO DEL OUTERHTML ES: ", taskAsObject);
+    return taskAsObject
+}
+
 
 function isThisWeek(date) {
     let thisWeek = new Date();
@@ -701,3 +744,70 @@ function isThisMonth(date) {
             3 FUNCIONES DIFERENTES PARA CADA DIV. EVITANDO ASI NUEVAMENTE LA REPETICION.
 
             */
+
+
+/* JSFIDDLE JSFIDDLE JSFIDDLE
+function getTodayDate() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+
+    return today = dd + '/' + mm + '/' + yyyy;
+}
+function taskUserCreated(name, hstimes, xp, creationDate) {
+    this.taskName = name;
+    this.hsOrTime = hstimes;
+    this.xpReward = xp;
+    this.creationDate = creationDate;
+}
+
+function outerHtmlToObject(outerHtmlString) {
+    let taskName = outerHtmlString.substring(outerHtmlString.indexOf("•")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("•") ));
+    let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("+") ));
+    let taskCreationDate = getTodayDate();
+    const taskAsObject = new taskUserCreated();
+
+    Object.defineProperties(taskAsObject, {
+        taskName: {
+            value: taskName
+        },
+        xpReward: {
+            value: taskXP
+        },
+        creationDate: {
+            value: taskCreationDate
+        }
+    });
+    return taskAsObject
+}
+
+
+
+allTasksDone = [[]];
+function checkIfTaskHasBeenDoneAlready(todayTaskLI) {
+    for(let i=0;i<allTasksDone.length;i++){
+    		if(allTasksDone[0][0] == undefined) {
+        console.log("entro")
+            allTasksDone.push(todayTaskLI)
+
+        }
+        else if(allTasksDone[i][0][0].taskName.includes(todayTaskLI.taskName)) {
+
+            allTasksDone[i].push(todayTaskLI)
+
+        }
+        else if(!allTasksDone[i][0].taskName.includes(todayTaskLI.taskName)) {
+            let newTaskArray = [todayTaskLI];
+            allTasksDone.push(newTaskArray);
+
+        }
+    }
+}
+
+checkIfTaskHasBeenDoneAlready( outerHtmlToObject(  `<p class="taskAdded bodyText"> •Go to the gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1" fdprocessedid="0m7xxh"> <span class="taskXP favouriteColor">+222xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" style="display:none" alt="" alreadyhasclicklistenerfordelete="true">`   ) )
+
+checkIfTaskHasBeenDoneAlready( outerHtmlToObject(  `<p class="taskAdded bodyText"> •Go to the gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1" fdprocessedid="0m7xxh"> <span class="taskXP favouriteColor">+222xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" style="display:none" alt="" alreadyhasclicklistenerfordelete="true">`   ) )
+
+
+console.log(allTasksDone)*/
