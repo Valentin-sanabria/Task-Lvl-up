@@ -16,12 +16,14 @@ let clickableTask = document.querySelectorAll("#taskDoneToday li");
 let allWeeklis = [];
 let tasksArrayRecommendation = JSON.parse( localStorage.getItem("taskArrayrecommendation") );
 if (tasksArrayRecommendation === null){
-    console.log("tasks creadas vacio");
     tasksArrayRecommendation = [];
+}
+let allTasksDone = JSON.parse(localStorage.getItem("allTasksDone"));
+if (allTasksDone === null){
+    allTasksDone = [[]];
 }
 let taskCreatedListStorage = JSON.parse( localStorage.getItem("task") );
 if (taskCreatedListStorage === null){
-    console.log("task vacio");
     taskCreatedListStorage = [];
 }
 let suggestionsDiv = document.getElementById("suggestions");
@@ -291,36 +293,27 @@ function outerHtmlToObject(outerHtmlString) {
     return taskAsObject
 }
 
-allTasksDone = [[]];
-console.log(allTasksDone);
 function checkIfTaskHasBeenDoneAlready(todayTaskLI) {
     let arrayLength = allTasksDone.length
     for(let i=0;i<arrayLength;i++){
-        if(allTasksDone[0][0] == undefined) {
-            console.log("entro")
+        console.log(allTasksDone);
+        if(allTasksDone[0] == "") {
             let newTaskArray = [todayTaskLI];
-            allTasksDone[0][0] = newTaskArray;
+            allTasksDone[0] = newTaskArray;
             console.log(allTasksDone);
-            console.log(allTasksDone[0][0].taskName);
         }
         else if(allTasksDone[i][0].taskName.includes(todayTaskLI.taskName)) {
-            console.log("entro al que se supone");
-            allTasksDone[i].push(todayTaskLI)
-
+            allTasksDone[i].push(todayTaskLI);
+            break;
         }
-        else if(!allTasksDone[i][0].taskName.includes(todayTaskLI.taskName)) {
-            console.log("entro al que NO se supone");
+        else if(!allTasksDone[i][0].taskName.includes(todayTaskLI.taskName) && i === allTasksDone.length - 1) {
             let newTaskArray = [todayTaskLI];
             allTasksDone.push(newTaskArray);
-
+            break;
         }
     }
-    
+    localStorage.setItem("allTasksDone", JSON.stringify(allTasksDone));
 }
-
-checkIfTaskHasBeenDoneAlready( outerHtmlToObject(  `<p class="taskAdded bodyText"> •Go to the gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1" fdprocessedid="0m7xxh"> <span class="taskXP favouriteColor">+222xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" style="display:none" alt="" alreadyhasclicklistenerfordelete="true">`   ) )
-checkIfTaskHasBeenDoneAlready( outerHtmlToObject(  `<p class="taskAdded bodyText"> •Go to the gym</p> <input class="amountTimes bodyText" type="number" min="1" value="1" fdprocessedid="0m7xxh"> <span class="taskXP favouriteColor">+222xp</span> <img class="deleteIcon hidePRO" src="imgs/deleteIcon.png" style="display:none" alt="" alreadyhasclicklistenerfordelete="true">`   ) )
-console.log(allTasksDone);
 
 
 
@@ -329,8 +322,13 @@ function todayToWeekly() {
     let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
     let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
     let timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
+    console.log(pTaskToday);
 
-
+    pTaskToday.forEach( task => {
+        checkIfTaskHasBeenDoneAlready(outerHtmlToObject(task.outerHTML));
+    } )
+    
+  /*
     //Check duplicates
     for(let j of pTaskToday){
         for(let k of pTaskWeek){
@@ -361,10 +359,11 @@ function todayToWeekly() {
             currentDate.classList.add("hide");
             newUniqueTask.append(currentDate);
             ulWeekTasks.append(newUniqueTask);
+            outerHtmlToObject(newUniqueTask.outerHTML);
 
         }
         quantityAppareance = 0;
-    }
+    } */
     allWeeklis = document.querySelectorAll("ul#taskDoneWeek li span.taskXP");
     timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
     timesTaskWeek.forEach(element => {
@@ -497,98 +496,6 @@ function addXP(li) {
     })
 }
 
-function storageToWeekly(currentLI) {
-    let quantityAppareance = 0;
-    let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
-    for(let k of pTaskWeek){
-        if ( currentLI.children[0].innerHTML == k.innerHTML){
-            quantityAppareance++;
-        }
-
-        if ( k.parentElement.children[1].innerHTML == ""){
-            k.parentElement.children[1].innerHTML == "1 time."
-        }
-        //Update amount of times/hours the activity was done and how much XP it has given in total.
-        if (quantityAppareance > 0 && currentLI.children[0].innerHTML == k.innerHTML ){
-            k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(currentLI.children[0].parentElement.children[1].value)) + " times.";
-            k.parentElement.children[2].innerHTML = "+" + ( parseInt(currentLI.children[0].parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
-        }
-        //Remove duplicate.
-        if (quantityAppareance > 1 &&  currentLI.children[0].innerHTML == k.innerHTML ){
-            k.parentElement.remove();
-        }
-    }
-    if ( quantityAppareance === 0 ){
-        // if(newUniqueTask.children.length !== 3) {
-        //     newUniqueTask.children[3].remove();
-        // }
-        let clonedLI = currentLI.cloneNode(true)
-        ulWeekTasks.append(clonedLI);
-    }
-    quantityAppareance = 0;
-}
-
-function storageToMonthly(currentLI) {
-    let quantityAppareance = 0;
-    let pTaskMonth= document.querySelectorAll("ul#ulMonthTasks li p.taskAdded");
-    for(let k of pTaskMonth){
-        if ( currentLI.children[0].innerHTML == k.innerHTML){
-            quantityAppareance++;
-        }
-
-        if ( k.parentElement.children[1].innerHTML == ""){
-            k.parentElement.children[1].innerHTML == "1 time."
-        }
-        //Update amount of times/hours the activity was done and how much XP it has given in total.
-        if (quantityAppareance > 0 && currentLI.children[0].innerHTML == k.innerHTML ){
-            k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(currentLI.children[0].parentElement.children[1].value)) + " times.";
-            k.parentElement.children[2].innerHTML = "+" + ( parseInt(currentLI.children[0].parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
-        }
-        //Remove duplicate.
-        if (quantityAppareance > 1 &&  currentLI.children[0].innerHTML == k.innerHTML ){
-            k.parentElement.remove();
-        }
-    }
-    if ( quantityAppareance === 0 ){
-        // if(newUniqueTask.children.length !== 3) {
-        //     newUniqueTask.children[3].remove();
-        // }
-        let clonedLI = currentLI.cloneNode(true)
-        ulMonthTasks.append(clonedLI);
-    }
-    quantityAppareance = 0;
-}
-
-function storageToYearly(currentLI) {
-    let quantityAppareance = 0;
-    let pTaskYear= document.querySelectorAll("ul#ulYearTasks li p.taskAdded");
-    for(let k of pTaskYear){
-        if ( currentLI.children[0].innerHTML == k.innerHTML){
-            quantityAppareance++;
-        }
-
-        if ( k.parentElement.children[1].innerHTML == ""){
-            k.parentElement.children[1].innerHTML == "1 time."
-        }
-        //Update amount of times/hours the activity was done and how much XP it has given in total.
-        if (quantityAppareance > 0 && currentLI.children[0].innerHTML == k.innerHTML ){
-            k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(currentLI.children[0].parentElement.children[1].value)) + " times.";
-            k.parentElement.children[2].innerHTML = "+" + ( parseInt(currentLI.children[0].parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
-        }
-        //Remove duplicate.
-        if (quantityAppareance > 1 &&  currentLI.children[0].innerHTML == k.innerHTML ){
-            k.parentElement.remove();
-        }
-    }
-    if ( quantityAppareance === 0 ){
-        // if(newUniqueTask.children.length !== 3) {
-        //     newUniqueTask.children[3].remove();
-        // }
-        let clonedLI = currentLI.cloneNode(true)
-        ulYearTasks.append(clonedLI);
-    }
-    quantityAppareance = 0;
-}
 
 var amountOfTasks;
 var allTasksDoneEver = [];
@@ -608,33 +515,27 @@ function saveWeekProgress() {
     }
 }
 
-//Decide in which UL should the LI append itself to depending on its creation date.
-function filterLIByDate(currentLI) {
-    if( isThisWeek(currentLI.children[0].children[1].children[0].children[3].innerText) ) {
-        storageToWeekly(currentLI.children[0].children[1].children[0]);
-        storageToMonthly(currentLI.children[0].children[1].children[0]);
-        storageToYearly(currentLI.children[0].children[1].children[0]);
-    } else if ( isThisMonth(currentLI.children[0].children[1].children[0].children[3].innerText) )  {
-        storageToMonthly(currentLI.children[0].children[1].children[0]);
-        storageToYearly(currentLI.children[0].children[1].children[0]);
-    } else {
-        storageToYearly(currentLI.children[0].children[1].children[0]);
-    }
-}
-
 var parsedWeekList = [];
 var liWeek = [];
 function loadWeekProgress() {
-    parsedWeekList = JSON.parse( localStorage.getItem("listOfAllTasksDoneEver") );
-    let parser = new DOMParser();
+    parsedWeekList = JSON.parse( localStorage.getItem("allTasksDone") );
+
     if(parsedWeekList !== null){
-        for (var p=0; p<parsedWeekList.length ; p++){
-            filterLIByDate(parser.parseFromString(parsedWeekList[p], "text/html"));
-            // ES UNA STRING Y NECESITO ACCEDER A LOS CHILDREN.
-            // liWeek[p] = document.createElement("li");
-            // ulWeekTasks.append(liWeek[p]);
-            // liWeek[p].outerHTML = parsedWeekList[p];
-        }
+        parsedWeekList.forEach( task => {
+            let newElement = document.createElement("p") 
+            newElement.innerHTML = '<li> <p class="taskAdded bodyText"> •'+task[0].taskName+'</p> <p class="taskAdded bodyText">'+task.length+' times. </p> <span class="taskXP favouriteColor">+'+(task[0].xpReward * task.length)+'xp</span>  </li>'
+    
+            if( isThisWeek(task[0].creationDate) ) {
+                ulWeekTasks.append(newElement.cloneNode(true)); 
+                ulMonthTasks.append(newElement.cloneNode(true)); 
+                ulYearTasks.append(newElement.cloneNode(true)); 
+            } else if ( isThisMonth(task[0].creationDate) )  {
+                ulMonthTasks.append(newElement.cloneNode(true)); 
+                ulYearTasks.append(newElement.cloneNode(true)); 
+            } else {
+                ulYearTasks.append(newElement.cloneNode(true)); 
+            }
+        })
     }
 }
 
@@ -691,7 +592,7 @@ function isThisWeek(date) {
     var dd = String(thisWeek.getDate()).padStart(2, '0');
     var mm = String(thisWeek.getMonth() + 1).padStart(2, '0');
     var yyyy = thisWeek.getFullYear();
-    thisWeek = dd + '/' + mm + '/' + yyyy;
+    thisWeek = mm + '/' + dd + '/' + yyyy;
 
     if (date > thisWeek ) {
         return true;
