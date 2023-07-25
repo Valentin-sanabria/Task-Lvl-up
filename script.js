@@ -231,10 +231,11 @@ createButton.addEventListener("click", createTask =>{
 })
 
 //Object structure for each user task.
-function taskUserCreated(name, hstimes, xp, creationDate) {
+function taskUserCreated(name, hstimes, xp, creationDate, amount) {
     this.taskName = name;
     this.hsOrTime = hstimes;
     this.xpReward = xp;
+    this.amountTimesHs = amount;
     this.creationDate = creationDate;
 }
 
@@ -275,6 +276,7 @@ confirmTasks.addEventListener("click", todayToWeekly2 => {
 function outerHtmlToObject(outerHtmlString) {
     let taskName = outerHtmlString.substring(outerHtmlString.indexOf("•")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("•") ));
     let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("+") ));
+
     let taskCreationDate = getTodayDate();
     const taskAsObject = new taskUserCreated();
 
@@ -289,7 +291,7 @@ function outerHtmlToObject(outerHtmlString) {
             value: taskCreationDate
         }
     });
-    console.log("EL OBJETO SACADO DEL OUTERHTML ES: ", taskAsObject);
+
     return taskAsObject
 }
 
@@ -303,7 +305,10 @@ function checkIfTaskHasBeenDoneAlready(todayTaskLI) {
             console.log(allTasksDone);
         }
         else if(allTasksDone[i][0].taskName.includes(todayTaskLI.taskName)) {
-            allTasksDone[i].push(todayTaskLI);
+            for(let j=0;j < todayTaskLI.amountTimesHs;j++){
+                allTasksDone[i].push(todayTaskLI);
+            }
+
             break;
         }
         else if(!allTasksDone[i][0].taskName.includes(todayTaskLI.taskName) && i === allTasksDone.length - 1) {
@@ -320,12 +325,16 @@ function checkIfTaskHasBeenDoneAlready(todayTaskLI) {
 function todayToWeekly() {
     let quantityAppareance = 0;
     let pTaskWeek = document.querySelectorAll("ul#ulWeekTasks li p.taskAdded");
-    let pTaskToday = document.querySelectorAll("ul#taskDoneToday li p.taskAdded");
+    let pTaskToday = document.querySelectorAll("ul#taskDoneToday li");
     let timesTaskWeek = document.querySelectorAll("ul#ulWeekTasks li input.amountTimes");
     console.log(pTaskToday);
-
+    let taskOuterHTML
     pTaskToday.forEach( task => {
-        checkIfTaskHasBeenDoneAlready(outerHtmlToObject(task.outerHTML));
+        if(task.outerHTML.includes('min="1" value="1"')){
+            taskOuterHTML = task.outerHTML.replace('min="1" value="1"', 'min="1" value="'+ task.children[1].value + '"')
+            console.log("EL TASK CON VALUE ACTUALIZADO ES: "+taskOuterHTML)
+        }
+        checkIfTaskHasBeenDoneAlready(outerHtmlToObject(taskOuterHTML));
     } )
     
   /*
@@ -483,8 +492,11 @@ function todayToYearly() {
         if (parseInt(element.value) == 1){
             inputToText.innerText = element.value + " time.";
         }
+        element.parentElement.children[2].innerHTML = "+" + ( parseInt(element.parentElement.children[2].innerHTML) * parseInt(element.parentElement.children[1].value) ) + "xp";
         element.replaceWith(inputToText);
+
     });
+
     saveWeekProgress();
 }
 
@@ -511,7 +523,7 @@ function saveWeekProgress() {
             
         }
         //Make the updated array a string and automatically save it on localStorage
-         localStorage.setItem("listOfAllTasksDoneEver", JSON.stringify(allTasksDoneEver) );
+        localStorage.setItem("listOfAllTasksDoneEver", JSON.stringify(allTasksDoneEver) );
     }
 }
 
@@ -566,8 +578,10 @@ function getTodayDate() {
 
 function outerHtmlToObject(outerHtmlString) {
     let taskName = outerHtmlString.substring(outerHtmlString.indexOf("•")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("•") ));
-    let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("+") ));
+    let taskXP = outerHtmlString.substring(outerHtmlString.indexOf("+")+1,outerHtmlString.indexOf("x", outerHtmlString.indexOf("+") ));
+    console.log(outerHtmlString.indexOf("+")+1,outerHtmlString.indexOf("<", outerHtmlString.indexOf("+")))
     let taskCreationDate = getTodayDate();
+    let taskAmountTimesHs = outerHtmlString.substring(outerHtmlString.indexOf('min="1" value="')+15, outerHtmlString.indexOf('min="1" value="')+16);
     const taskAsObject = new taskUserCreated();
 
     Object.defineProperties(taskAsObject, {
@@ -579,9 +593,11 @@ function outerHtmlToObject(outerHtmlString) {
         },
         creationDate: {
             value: taskCreationDate
+        },
+        amountTimesHs: {
+            value: taskAmountTimesHs
         }
     });
-    console.log("EL OBJETO SACADO DEL OUTERHTML ES: ", taskAsObject);
     return taskAsObject
 }
 
@@ -712,3 +728,58 @@ checkIfTaskHasBeenDoneAlready( outerHtmlToObject(  `<p class="taskAdded bodyText
 
 
 console.log(allTasksDone)*/
+
+let leftclickablearrow = document.getElementById("leftclickablearrow");
+let rightclickablearrow = document.getElementById("rightclickablearrow");
+let sectionTitle = document.getElementById("sectionTitle");
+
+leftclickablearrow.addEventListener("click", leftclickableArrow =>{ 
+
+    console.log("damn im working");
+    if(sectionTitle.innerText === "This week"){
+
+        setTimeout(() => {
+            ulWeekTasks.classList.add('hide');
+        }, 500);
+        ulWeekTasks.classList.remove('notInvisible');
+        ulWeekTasks.classList.add('invisible');
+
+
+            ulYearTasks.classList.remove('hide');
+            setTimeout(() => {
+                ulYearTasks.classList.remove('invisible');
+                ulYearTasks.classList.add('notInvisible');
+            }, 500);
+
+        sectionTitle.innerText = "This year";
+    } else if(sectionTitle.innerText === "This year"){
+        ulYearTasks.classList.remove('notInvisible');
+        ulYearTasks.classList.add('invisible');
+        setTimeout(() => {
+            ulYearTasks.classList.add('hide');
+        }, 500);
+
+            ulMonthTasks.classList.remove('hide');
+            setTimeout(() => {
+                ulMonthTasks.classList.remove('invisible');
+                ulMonthTasks.classList.add('notInvisible');
+            }, 500);
+
+        sectionTitle.innerText = "This month";
+    } else if (sectionTitle.innerText === "This month") {
+
+        ulMonthTasks.classList.remove('notInvisible');
+        ulMonthTasks.classList.add('invisible');
+        setTimeout(() => {
+            ulMonthTasks.classList.add('hide');
+        }, 500);
+
+            ulWeekTasks.classList.remove('hide');
+            setTimeout(() => {
+                ulWeekTasks.classList.remove('invisible');
+                ulWeekTasks.classList.add('notInvisible');
+            }, 500);
+
+        sectionTitle.innerText = "This week";
+    }
+})
