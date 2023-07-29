@@ -267,6 +267,29 @@ function checkInput(){
     }
 }
 
+//Changes colour of all LI inside tasks created UL for user understanding.
+let deleteButtonClicked = false;
+let alltasksLI = document.querySelectorAll("#tasksAddedList li");
+deleteCreatedTask.addEventListener("click", changeULcolour => {
+    if(deleteButtonClicked === false) {
+        deleteButtonClicked = true;
+    } else if(deleteButtonClicked === true) {
+        deleteButtonClicked = false;
+    }
+    alltasksLI = document.querySelectorAll("#tasksAddedList li");
+
+    if(deleteButtonClicked === true) {
+        alltasksLI.forEach(taskLI => {
+            taskLI.style.backgroundColor = "#C70039"
+        });
+    } else if(deleteButtonClicked === false) {
+        alltasksLI.forEach(taskLI => {
+            taskLI.style.backgroundColor = ""
+        });
+    }
+    console.log(alltasksLI);
+
+})
 //Removes tasks from DOM and Localstorage when clicked a 2nd time.
 
 
