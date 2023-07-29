@@ -795,3 +795,56 @@ leftclickablearrow.addEventListener("click", leftclickableArrow =>{
         sectionTitle.innerText = "This week";
     }
 })
+
+rightclickablearrow.addEventListener("click", rightclickablearrow =>{ 
+
+    console.log("damn im working");
+    if(sectionTitle.innerText === "This week"){
+
+        setTimeout(() => {
+            ulWeekTasks.classList.add('hide');
+        }, 500);
+        ulWeekTasks.classList.remove('notInvisible');
+        ulWeekTasks.classList.add('invisible');
+
+
+        ulMonthTasks.classList.remove('hide');
+            setTimeout(() => {
+                ulMonthTasks.classList.remove('invisible');
+                ulMonthTasks.classList.add('notInvisible');
+            }, 500);
+
+        sectionTitle.innerText = "This month";
+    } else if(sectionTitle.innerText === "This year"){
+        ulYearTasks.classList.remove('notInvisible');
+        ulYearTasks.classList.add('invisible');
+        setTimeout(() => {
+            ulYearTasks.classList.add('hide');
+        }, 500);
+
+            ulWeekTasks.classList.remove('hide');
+            setTimeout(() => {
+                ulWeekTasks.classList.remove('invisible');
+                ulWeekTasks.classList.add('notInvisible');
+            }, 500);
+
+        sectionTitle.innerText = "This week";
+    } else if (sectionTitle.innerText === "This month") {
+
+        ulMonthTasks.classList.remove('notInvisible');
+        ulMonthTasks.classList.add('invisible');
+        setTimeout(() => {
+            ulMonthTasks.classList.add('hide');
+        }, 500);
+
+            ulYearTasks.classList.remove('hide');
+            setTimeout(() => {
+                ulYearTasks.classList.remove('invisible');
+                ulYearTasks.classList.add('notInvisible');
+            }, 500);
+
+        sectionTitle.innerText = "This year";
+    }
+})
+
+addAllTasksXP();
