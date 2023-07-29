@@ -5,6 +5,7 @@ let amountTimesHs = document.querySelectorAll("input.amountTimes")
 let taskXP = document.querySelectorAll("span.taskXP");
 let currentLVL  = document.getElementById("currentLVL");
 let addNewTask = document.getElementById("newTaskButton");
+let deleteCreatedTask = document.getElementById("deleteTaskButton");
 let tasksAddedList = document.getElementById("tasksAddedList");
 let confirmTasks = document.getElementById("confirmTasks");
 let ulDoneToday = document.getElementById("taskDoneToday");
@@ -95,32 +96,36 @@ function fillInput(taskChosenInfo) {
     assignRemoveElementWhenClickEvent();
 }
 
+//Add XP from all tasks done in this year
+let allXpAdded = parseInt(currentXP.innerText);
+function addAllTasksXP() {
+    for(let i=0;i<ulYearTasks.children.length;i++){
+        amountOfXpSpan = ulYearTasks.children[i].children[2].innerText;
+        allXpAdded = allXpAdded + parseInt(amountOfXpSpan.substring(amountOfXpSpan.indexOf("+")+1,amountOfXpSpan.indexOf("x", amountOfXpSpan.indexOf("+") )));
+        currentXP.innerText = allXpAdded;
+    }
+    checkLVLUP()
+}
+
 //Checks totalXP has not surpassed the amount needed to level up. If it has, change output to match accordingly.
 function checkLVLUP() {
-    if (totalXP >= totalLevelXP) {
-        mediumLVLUP();
+    if (parseInt(currentXP.innerText) >= parseInt(xpNeededForLvlUp.innerText)) {
+        LVLUP();
         currentLVL.innerHTML = parseInt(currentLVL.innerHTML) + 1;
-        currentXP.innerHTML = totalXP + " / " + totalLevelXP;
     }
 }
 
 // Difficulty settings.
-function easyLVLUP() {
-
-    totalXP = totalXP-100;
-    totalLevelXP = Math.round(totalLevelXP * 1.22);
-
-}
-function mediumLVLUP() {
-
-    totalXP = totalXP-300;
-    totalLevelXP = Math.round(totalLevelXP * 1.22);
-
-}
-function hardLVLUP() {
-
-    totalXP = totalXP-600;
-    totalLevelXP = Math.round(totalLevelXP * 1.26);
+function LVLUP() {
+    if(totalLevelXP > 15000){
+        totalLevelXP = Math.round(totalLevelXP * 1.1);
+    } else if (totalLevelXP > 10000){
+        totalLevelXP = Math.round(totalLevelXP * 1.22);
+    } else {
+        totalLevelXP = Math.round(totalLevelXP * 1.46);
+    }
+    currentXP.innerText = parseInt(currentXP.innerText) - parseInt(xpNeededForLvlUp.innerText);
+    xpNeededForLvlUp.innerText = totalLevelXP;
 
 }
 
@@ -212,7 +217,12 @@ createButton.addEventListener("click", createTask =>{
         //Modify text of vars with text inputted by user. Add vars their respective classes for styling.
         const taskCreated = new taskUserCreated(createTaskName.value, hsOrTime, createTaskXP.value);
         pTask.innerHTML = taskCreated.taskName;
-        spanPTask.innerText = "+" + taskCreated.xpReward + "xp";
+        if(hsOrTime === "session") {
+            spanPTask.innerText = "+" + taskCreated.xpReward + "xp";
+        }
+        if(hsOrTime ===  "hours") {
+            spanPTask.innerText = "+" + (taskCreated.xpReward * 60) + "xp";
+        }
         pTask.classList.add("bodyText");
         spanPTask.classList.add("favouriteColor");
 
@@ -256,6 +266,8 @@ function checkInput(){
         return true;
     }
 }
+
+//Removes tasks from DOM and Localstorage when clicked a 2nd time.
 
 
 //        THIS WEEK/MONTH FUNCTIONS
@@ -496,8 +508,8 @@ function todayToYearly() {
         element.replaceWith(inputToText);
 
     });
-
     saveWeekProgress();
+    addAllTasksXP();
 }
 
 //Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
@@ -534,8 +546,8 @@ function loadWeekProgress() {
 
     if(parsedWeekList !== null){
         parsedWeekList.forEach( task => {
-            let newElement = document.createElement("p") 
-            newElement.innerHTML = '<li> <p class="taskAdded bodyText"> •'+task[0].taskName+'</p> <p class="taskAdded bodyText">'+task.length+' times. </p> <span class="taskXP favouriteColor">+'+(task[0].xpReward * task.length)+'xp</span>  </li>'
+            let newElement = document.createElement("li") 
+            newElement.innerHTML = '<p class="taskAdded bodyText"> •'+task[0].taskName+'</p> <p class="taskAdded bodyText">'+task.length+' times. </p> <span class="taskXP favouriteColor">+'+(task[0].xpReward * task.length)+'xp</span>'
     
             if( isThisWeek(task[0].creationDate) ) {
                 ulWeekTasks.append(newElement.cloneNode(true)); 

@@ -45,12 +45,21 @@ button img {
     margin-bottom: 10px;
 }
 
-#newTaskButton {
-    padding: 6px;
-    margin-top: 8px;
+.deletecreatetasksbuttons{
+    padding: 12px;
+    margin: 3px 6px;
     border-radius: 22px;
     background-color: rgb(58, 56, 56);
 }
+
+.deletecreatetasksbuttons span{
+    color: rgb(218, 218, 218);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 19px;
+    background-color: inherit;
+    margin: 0px 0px 0px 8px;
+}
+
 
 a{
     text-decoration: none;
