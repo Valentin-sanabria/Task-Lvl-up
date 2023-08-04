@@ -267,32 +267,6 @@ function checkInput(){
     }
 }
 
-//Changes colour of all LI inside tasks created UL for user understanding.
-let deleteButtonClicked = false;
-let alltasksLI = document.querySelectorAll("#tasksAddedList li");
-deleteCreatedTask.addEventListener("click", changeULcolour => {
-    if(deleteButtonClicked === false) {
-        deleteButtonClicked = true;
-    } else if(deleteButtonClicked === true) {
-        deleteButtonClicked = false;
-    }
-    alltasksLI = document.querySelectorAll("#tasksAddedList li");
-
-    if(deleteButtonClicked === true) {
-        alltasksLI.forEach(taskLI => {
-            taskLI.style.backgroundColor = "#C70039"
-        });
-    } else if(deleteButtonClicked === false) {
-        alltasksLI.forEach(taskLI => {
-            taskLI.style.backgroundColor = ""
-        });
-    }
-    console.log(alltasksLI);
-
-})
-//Removes tasks from DOM and Localstorage when clicked a 2nd time.
-
-
 //        THIS WEEK/MONTH FUNCTIONS
 
 
@@ -598,8 +572,7 @@ function loadtasksArrayRecommendation() {
         }
     }
 }
-loadtasksArrayRecommendation();
-loadWeekProgress();
+
 
 
 function getTodayDate() {
@@ -870,4 +843,47 @@ rightclickablearrow.addEventListener("click", rightclickablearrow =>{
     }
 })
 
+loadtasksArrayRecommendation();
+loadWeekProgress();
 addAllTasksXP();
+
+
+//Changes colour of all LI inside tasks created UL for user understanding.
+let deleteButtonClicked = false;
+let alltasksLI = document.querySelectorAll("#tasksAddedList li");
+deleteCreatedTask.addEventListener("click", changeULcolour => {
+    if(deleteButtonClicked === false) {
+        deleteButtonClicked = true;
+    } else if(deleteButtonClicked === true) {
+        deleteButtonClicked = false;
+    }
+    alltasksLI = document.querySelectorAll("#tasksAddedList li");
+
+    if(deleteButtonClicked === true) {
+        alltasksLI.forEach(taskLI => {
+            taskLI.style.backgroundColor = "#C70039"
+        });
+    } else if(deleteButtonClicked === false) {
+        alltasksLI.forEach(taskLI => {
+            taskLI.style.backgroundColor = ""
+        });
+    }
+    console.log(alltasksLI);
+
+})
+//Removes tasks from DOM and Localstorage when clicked a 2nd time.
+alltasksLI.forEach(task => {
+    task.addEventListener("click", deleteTask => {
+        let tasksColumn = JSON.parse(localStorage.getItem("task"));
+        for(var i=0; i < tasksColumn.length ; i++){
+            if(tasksColumn[i].substring(tasksColumn[i].indexOf('">')+2, tasksColumn[i].indexOf('</p')) === task.children[0].innerText){
+                task.remove();
+                console.log(tasksColumn);
+                tasksColumn.splice(i, 1);
+                console.log(tasksColumn);
+                break;
+            }
+        }
+        localStorage.getItem("taskArrayrecommendation")
+    } )
+});
