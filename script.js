@@ -238,6 +238,11 @@ createButton.addEventListener("click", createTask =>{
         localStorage.setItem("taskArrayrecommendation", JSON.stringify(tasksArrayRecommendation));
         localStorage.setItem("task", JSON.stringify(taskCreatedListStorage));
     }
+        //Add eventListener to new task in UL
+        alltasksLI = document.querySelectorAll("#tasksAddedList li");
+        alltasksLI.forEach(task => {
+            task.addEventListener("click", deleteTask);
+        })
 })
 
 //Object structure for each user task.
@@ -873,17 +878,23 @@ deleteCreatedTask.addEventListener("click", changeULcolour => {
 })
 //Removes tasks from DOM and Localstorage when clicked a 2nd time.
 alltasksLI.forEach(task => {
-    task.addEventListener("click", deleteTask => {
-        let tasksColumn = JSON.parse(localStorage.getItem("task"));
-        for(var i=0; i < tasksColumn.length ; i++){
-            if(tasksColumn[i].substring(tasksColumn[i].indexOf('">')+2, tasksColumn[i].indexOf('</p')) === task.children[0].innerText){
-                task.remove();
-                console.log(tasksColumn);
-                tasksColumn.splice(i, 1);
-                console.log(tasksColumn);
-                break;
+    task.addEventListener("click", deleteTask )
+});
+
+function deleteTask() {
+    let tasksColumn = JSON.parse(localStorage.getItem("task"));
+    alltasksLI.forEach(task => {
+        if(deleteButtonClicked === true) {
+            for(var i=0; i < tasksColumn.length ; i++){
+                if(tasksColumn[i].substring(tasksColumn[i].indexOf('">')+2, tasksColumn[i].indexOf('</p')) === task.children[0].innerText){
+                    task.remove();
+                    console.log(tasksColumn);
+                    tasksColumn.splice(i, 1);
+                    console.log(tasksColumn);
+                    localStorage.setItem("task", JSON.stringify(tasksColumn));
+                    break;
+                }
             }
         }
-        localStorage.getItem("taskArrayrecommendation")
-    } )
-});
+    });
+}
