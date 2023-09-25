@@ -97,13 +97,10 @@ function fillInput(taskChosenInfo) {
 }
 
 //Add XP from all tasks done in this year
-let allXpAdded = parseInt(currentXP.innerText);
-function addAllTasksXP() {
-    for(let i=0;i<ulYearTasks.children.length;i++){
-        amountOfXpSpan = ulYearTasks.children[i].children[2].innerText;
-        allXpAdded = allXpAdded + parseInt(amountOfXpSpan.substring(amountOfXpSpan.indexOf("+")+1,amountOfXpSpan.indexOf("x", amountOfXpSpan.indexOf("+") )));
-        currentXP.innerText = allXpAdded;
-    }
+let totalSumXP = parseInt(currentXP.innerText);
+function addAllTasksXP(taskCompleted) {
+    totalSumXP = totalSumXP + parseInt(taskCompleted.substring(taskCompleted.indexOf("+")+1,taskCompleted.indexOf("x", taskCompleted.indexOf("+") )));
+    currentXP.innerText = totalSumXP;
     checkLVLUP()
 }
 
@@ -112,6 +109,19 @@ function checkLVLUP() {
     if (parseInt(currentXP.innerText) >= parseInt(xpNeededForLvlUp.innerText)) {
         LVLUP();
         currentLVL.innerHTML = parseInt(currentLVL.innerHTML) + 1;
+        checkLVLUP();
+    }
+    localStorage.setItem("currentXP", JSON.stringify(currentXP.innerText));
+}
+
+//Load XP when opening app
+function loadCurrentXP() {
+    if ( isNaN(parseInt(JSON.parse(localStorage.getItem("currentXP")))) ){
+        currentXP.innerText = 0;
+    }
+    else {
+        currentXP.innerText = JSON.parse(localStorage.getItem("currentXP"));
+        checkLVLUP();
     }
 }
 
@@ -235,6 +245,7 @@ createButton.addEventListener("click", createTask =>{
         //Add task created to tasks array to include in future input suggestions.
         tasksArrayRecommendation.push(taskCreated);
         taskCreatedListStorage.push(nuevaTask.outerHTML);
+        console.log(taskCreatedListStorage);
         localStorage.setItem("taskArrayrecommendation", JSON.stringify(tasksArrayRecommendation));
         localStorage.setItem("task", JSON.stringify(taskCreatedListStorage));
     }
@@ -509,9 +520,10 @@ function todayToYearly() {
         element.parentElement.children[2].innerHTML = "+" + ( parseInt(element.parentElement.children[2].innerHTML) * parseInt(element.parentElement.children[1].value) ) + "xp";
         element.replaceWith(inputToText);
 
+
+        addAllTasksXP(inputToText.parentElement.children[2].innerHTML);
     });
     saveWeekProgress();
-    addAllTasksXP();
 }
 
 //Add xp to progressBar and changes number by adding parsed taskXP to totalXP.
@@ -850,13 +862,15 @@ rightclickablearrow.addEventListener("click", rightclickablearrow =>{
 
 loadtasksArrayRecommendation();
 loadWeekProgress();
-addAllTasksXP();
+loadCurrentXP();
 
-
-//Changes colour of all LI inside tasks created UL for user understanding.
+//Changes boolean and colour of all LI inside tasks created UL for user understanding.
 let deleteButtonClicked = false;
 let alltasksLI = document.querySelectorAll("#tasksAddedList li");
-deleteCreatedTask.addEventListener("click", changeULcolour => {
+deleteCreatedTask.addEventListener("click", callChangeULcolour => {
+    changeULcolour();
+})
+function changeULcolour() {
     if(deleteButtonClicked === false) {
         deleteButtonClicked = true;
     } else if(deleteButtonClicked === true) {
@@ -874,27 +888,36 @@ deleteCreatedTask.addEventListener("click", changeULcolour => {
         });
     }
     console.log(alltasksLI);
+}
 
-})
 //Removes tasks from DOM and Localstorage when clicked a 2nd time.
 alltasksLI.forEach(task => {
     task.addEventListener("click", deleteTask )
 });
 
-function deleteTask() {
+function deleteTask(e) {
     let tasksColumn = JSON.parse(localStorage.getItem("task"));
-    alltasksLI.forEach(task => {
+    tasksArrayRecommendation = JSON.parse(localStorage.getItem("taskArrayrecommendation"));
+    let taskName = e.target.innerText.substring(0, e.target.innerText.indexOf("+")-2);
         if(deleteButtonClicked === true) {
             for(var i=0; i < tasksColumn.length ; i++){
-                if(tasksColumn[i].substring(tasksColumn[i].indexOf('">')+2, tasksColumn[i].indexOf('</p')) === task.children[0].innerText){
-                    task.remove();
-                    console.log(tasksColumn);
+                if(tasksColumn[i].substring(tasksColumn[i].indexOf('">')+2, tasksColumn[i].indexOf('</p')) === taskName){
                     tasksColumn.splice(i, 1);
-                    console.log(tasksColumn);
                     localStorage.setItem("task", JSON.stringify(tasksColumn));
+                if( tasksArrayRecommendation[i].taskName === taskName){
+                    tasksArrayRecommendation.splice(i,1);
+                    localStorage.setItem("taskArrayrecommendation", JSON.stringify(tasksArrayRecommendation));
+                    taskCreatedListStorage.splice(i,1);
+                    console.log(taskCreatedListStorage);
+                }
+                    e.target.remove();
+                    changeULcolour();
                     break;
                 }
             }
         }
-    });
 }
+
+for (let task of tasksAddedList.children) {
+    task.addEventListener("click", deleteTask);
+  }
