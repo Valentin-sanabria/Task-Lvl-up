@@ -97,7 +97,12 @@ function fillInput(taskChosenInfo) {
 }
 
 //Add XP from all tasks done in this year
-let totalSumXP = parseInt(currentXP.innerText);
+let totalSumXP = 0;
+if(isNaN(parseInt(currentXP.innerText))){
+    totalSumXP = 0;
+} else {
+    totalSumXP = parseInt(currentXP.innerText);
+}
 function addAllTasksXP(taskCompleted) {
     totalSumXP = totalSumXP + parseInt(taskCompleted.substring(taskCompleted.indexOf("+")+1,taskCompleted.indexOf("x", taskCompleted.indexOf("+") )));
     currentXP.innerText = totalSumXP;
@@ -231,7 +236,7 @@ createButton.addEventListener("click", createTask =>{
             spanPTask.innerText = "+" + taskCreated.xpReward + "xp";
         }
         if(hsOrTime ===  "hours") {
-            spanPTask.innerText = "+" + (taskCreated.xpReward * 60) + "xp";
+            spanPTask.innerText = "+" + (taskCreated.xpReward) + "xp";
         }
         pTask.classList.add("bodyText");
         spanPTask.classList.add("favouriteColor");
@@ -279,8 +284,17 @@ function checkInput(){
         return false;
     }
     else {
+        if(JSON.parse(localStorage.getItem("task")) !== null){
+            let temporaryTaskArray = JSON.parse(localStorage.getItem("task"));
+            for (const task of temporaryTaskArray) {
+                console.log(task.substring(task.indexOf('">')+2, task.indexOf('</p')));
+                if ( createTaskName.value === task.substring(task.indexOf('">')+2, task.indexOf('</p')) ) {
+                    alert("There's a task with that name already. Avoid duplicate names.")
+                    return false;
+                }
+            }
         return true;
-    }
+    }}
 }
 
 //        THIS WEEK/MONTH FUNCTIONS
@@ -505,6 +519,7 @@ function todayToYearly() {
             currentDate.classList.add("hide");
             newUniqueTask.append(currentDate);
             ulYearTasks.append(newUniqueTask);
+            
 
         }
         quantityAppareance = 0;
@@ -519,10 +534,14 @@ function todayToYearly() {
         }
         element.parentElement.children[2].innerHTML = "+" + ( parseInt(element.parentElement.children[2].innerHTML) * parseInt(element.parentElement.children[1].value) ) + "xp";
         element.replaceWith(inputToText);
-
-
-        addAllTasksXP(inputToText.parentElement.children[2].innerHTML);
     });
+
+    let allTasksThisFar = document.querySelectorAll("ul#ulYearTasks li");
+    allTasksThisFar.forEach(element => {
+        // element.parentElement.children[2].innerHTML = "+" + ( parseInt(element.parentElement.children[2].innerHTML) * parseInt(element.parentElement.children[1].value) ) + "xp";
+        addAllTasksXP(element.children[2].innerHTML);
+    });
+    totalSumXP = 0;
     saveWeekProgress();
 }
 
@@ -921,3 +940,14 @@ function deleteTask(e) {
 for (let task of tasksAddedList.children) {
     task.addEventListener("click", deleteTask);
   }
+
+console.log(JSON.stringify(localStorage.getItem(localStorage)));
+
+  ///
+  /// AGREGAR FILTRO PARA QUE NO SE PUEDAN CARGAR DOS TASKS CON EL MISMO NOMBRE A LA VEZ
+  ///
+  /// ESTO VA A RESOLVER EL ISSUE DE QUE BORRANDO UNA TASK QUE APARECE DOS VECES SE BORRE LA 1RA Q APARECE Y NO LA SEGUNDA
+///
+///
+/// PRIMERO ENCARGARSE DE QUE LA APP FUNCIONE OK, DSP HACER ESTO Y DEMAS PULIMIENTOS.
+/// d
