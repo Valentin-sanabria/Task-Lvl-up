@@ -223,6 +223,12 @@ input::-webkit-inner-spin-button {
     background-color: inherit;
 }
 
+.vertical {
+    display: flex;
+    align-items: center;
+    background-color: inherit;
+}
+
 #xpBar {
     height: 20px;
     border-radius: 22px;

@@ -950,4 +950,33 @@ console.log(JSON.stringify(localStorage.getItem(localStorage)));
 ///
 ///
 /// PRIMERO ENCARGARSE DE QUE LA APP FUNCIONE OK, DSP HACER ESTO Y DEMAS PULIMIENTOS.
-/// d
+/// 
+
+let backupButton = document.getElementById("saveBackupBtn");
+
+backupButton.addEventListener("click", createBackup);
+
+function createBackup() {
+    const pageHTML = document.documentElement.outerHTML;
+    const localStorageData = JSON.stringify(localStorage);
+
+    // Combine the page HTML and localStorage data into a single object
+    const backupData = {
+        pageHTML,
+        localStorageData,
+    };
+
+    // Create a Blob containing the backup data as JSON
+    const blob = new Blob([JSON.stringify(backupData)], { type: 'application/json' });
+
+    // Create a temporary anchor element to trigger the download
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    
+    // Set the download attribute and filename
+    a.download = 'page_backup.json';
+    a.click();
+
+    // Clean up
+    URL.revokeObjectURL(a.href);
+}
