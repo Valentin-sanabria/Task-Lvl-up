@@ -1,6 +1,8 @@
 * {
     background-color: rgb(39, 38, 38);
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13.33px;
 }
 html {
     height: 100%;
@@ -38,6 +40,25 @@ button img {
     width: 12px;
     background-color: rgba(255, 0, 0, 0);
     color: whitesmoke;
+}
+
+label {
+    background-color: rgb(178, 156, 228);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 5px;
+    color: rgb(0, 0, 0);
+}
+
+
+label img {
+    width: 12px;
+    background-color: rgba(255, 0, 0, 0);
+    color: whitesmoke;
+}
+
+#backupFileInput {
+display: none;
 }
 
 #confirmTasks{
@@ -87,6 +108,7 @@ a:hover{
 }
 
 .favouriteColor {
+    font-family: 'Times New Roman', Times, serif;
     font-size: 18px;
     margin: 18px 18px 18px 0px;
     color: rgb(185, 162, 230);

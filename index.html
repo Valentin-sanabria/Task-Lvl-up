@@ -68,7 +68,8 @@
                 <h1 class="text">Lvl <span id="currentLVL" class="text">1</span></h1>
                 <div class="vertical">
                     <button id="saveBackupBtn">Save progress <img src="imgs/download-icon.png" alt="download-icon"></button>
-                    <button id="importBackupBtn">Load progress <img src="imgs/download-icon.png" alt="download-icon"></button>
+                    <label for="backupFileInput" id="importBackupBtn"> Load progress <img src="imgs/upload.png" alt="download-icon"> <input type="file" id="backupFileInput" accept=".json"></label>
+                    
                 </div>
             </div>
                 <div id="xpBar">
@@ -76,7 +77,7 @@
                         <div id="xpBarConfirmed"></div>
                     </div>
                 </div>
-            <p class="bodyText"> <span id="totalXP" class="bodyText"></span> / <span id="xpNeededForLvlUp" class="bodyText">727</span></p>
+            <p class="bodyText"> <span id="totalXP" class="bodyText"></span> / <span id="xpNeededForLvlUp" class="bodyText"></span></p>
         </div>
 
             <p>----------------------</p>

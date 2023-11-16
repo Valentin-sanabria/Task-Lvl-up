@@ -104,8 +104,17 @@ if(isNaN(parseInt(currentXP.innerText))){
     totalSumXP = parseInt(currentXP.innerText);
 }
 function addAllTasksXP(taskCompleted) {
-    totalSumXP = totalSumXP + parseInt(taskCompleted.substring(taskCompleted.indexOf("+")+1,taskCompleted.indexOf("x", taskCompleted.indexOf("+") )));
-    currentXP.innerText = totalSumXP;
+
+    if(typeof taskCompleted === "string"){
+        console.log(typeof taskCompleted);
+        totalSumXP = totalSumXP + parseInt(taskCompleted.substring(taskCompleted.indexOf("+")+1,taskCompleted.indexOf("x", taskCompleted.indexOf("+") )));
+        currentXP.innerText = totalSumXP;
+    }
+    else if (typeof taskCompleted === "number"){
+        console.log(typeof taskCompleted);
+        totalSumXP = totalSumXP + taskCompleted;
+        currentXP.innerText = totalSumXP;
+    }
     checkLVLUP()
 }
 
@@ -117,15 +126,21 @@ function checkLVLUP() {
         checkLVLUP();
     }
     localStorage.setItem("currentXP", JSON.stringify(currentXP.innerText));
+    localStorage.setItem("currentLVL", JSON.stringify(currentLVL.innerText));
+    localStorage.setItem("currentXPNeededForLvlUp", JSON.stringify(xpNeededForLvlUp.innerText));
 }
 
 //Load XP when opening app
 function loadCurrentXP() {
     if ( isNaN(parseInt(JSON.parse(localStorage.getItem("currentXP")))) ){
         currentXP.innerText = 0;
+        xpNeededForLvlUp.innerText = 727;
+        currentLVL.innerText = 1;
     }
     else {
         currentXP.innerText = JSON.parse(localStorage.getItem("currentXP"));
+        xpNeededForLvlUp.innerText = JSON.parse(localStorage.getItem("currentXPNeededForLvlUp"));
+        currentLVL.innerText = JSON.parse(localStorage.getItem("currentLVL"));
         checkLVLUP();
     }
 }
@@ -141,6 +156,7 @@ function LVLUP() {
     }
     currentXP.innerText = parseInt(currentXP.innerText) - parseInt(xpNeededForLvlUp.innerText);
     xpNeededForLvlUp.innerText = totalLevelXP;
+    totalSumXP = parseInt(currentXP.innerText);
 
 }
 
@@ -232,14 +248,21 @@ createButton.addEventListener("click", createTask =>{
         //Modify text of vars with text inputted by user. Add vars their respective classes for styling.
         const taskCreated = new taskUserCreated(createTaskName.value, hsOrTime, createTaskXP.value);
         pTask.innerHTML = taskCreated.taskName;
-        if(hsOrTime === "session") {
-            spanPTask.innerText = "+" + taskCreated.xpReward + "xp";
+        if (taskCreated.xpReward.includes("-")) {
+            spanPTask.innerText = taskCreated.xpReward + "xp";
+            spanPTask.classList.add("favouriteColor");
+            spanPTask.style.color = "rgb(241, 158, 158)";
         }
-        if(hsOrTime ===  "hours") {
-            spanPTask.innerText = "+" + (taskCreated.xpReward) + "xp";
+        else {
+            if(hsOrTime === "session") {
+                spanPTask.innerText = "+" + taskCreated.xpReward + "xp";
+            }
+            if(hsOrTime ===  "hours") {
+                spanPTask.innerText = "+" + (taskCreated.xpReward) + "xp";
+            }
+            spanPTask.classList.add("favouriteColor");
         }
         pTask.classList.add("bodyText");
-        spanPTask.classList.add("favouriteColor");
 
         //Add vars created to their corresponding fathers, pTask and spanPTask are brothers so
         //Justify-content picks up both. If span appended to p wont work.
@@ -279,7 +302,7 @@ function checkInput(){
         return false;
     }
     //Contains anything that is NOT a number.
-    else if ( /\D/.test(createTaskXP.value) == true ){
+    else if ( /^-?\d+$/.test(createTaskXP.value) === false ){
         alert("Task XP rewards can not contain anything that is not a number.")
         return false;
     }
@@ -503,6 +526,9 @@ function todayToYearly() {
             if (quantityAppareance > 0 &&  j.innerHTML == k.innerHTML ){
                 k.parentElement.children[1].innerHTML = (parseInt(k.parentElement.children[1].innerText) + parseInt(j.parentElement.children[1].value)) + " times.";
                 k.parentElement.children[2].innerHTML = "+" + ( parseInt(j.parentElement.children[2].innerHTML) * parseInt(k.parentElement.children[1].innerHTML) ) + "xp";
+
+                //Add the XP of only the new amount loaded in, ignoring past XP value for the same activity. For ex, if activity has 300xp and today we add 100xp, we must sum only 100xp, not the total amount of 400xp.
+                addAllTasksXP(parseInt(j.parentElement.children[1].value)*parseInt(j.parentElement.children[2].innerHTML));
             }
             //Remove duplicate.
             if (quantityAppareance > 1 &&  j.innerHTML == k.innerHTML ){
@@ -515,12 +541,11 @@ function todayToYearly() {
                 newUniqueTask.children[3].remove();
             }
             let currentDate = document.createElement("p");
-            currentDate.innerText = "05/03/2023";
+            currentDate.innerText = getTodayDate();
             currentDate.classList.add("hide");
             newUniqueTask.append(currentDate);
             ulYearTasks.append(newUniqueTask);
-            
-
+            addAllTasksXP(parseInt(newUniqueTask.children[2].innerText));
         }
         quantityAppareance = 0;
     }
@@ -535,13 +560,6 @@ function todayToYearly() {
         element.parentElement.children[2].innerHTML = "+" + ( parseInt(element.parentElement.children[2].innerHTML) * parseInt(element.parentElement.children[1].value) ) + "xp";
         element.replaceWith(inputToText);
     });
-
-    let allTasksThisFar = document.querySelectorAll("ul#ulYearTasks li");
-    allTasksThisFar.forEach(element => {
-        // element.parentElement.children[2].innerHTML = "+" + ( parseInt(element.parentElement.children[2].innerHTML) * parseInt(element.parentElement.children[1].value) ) + "xp";
-        addAllTasksXP(element.children[2].innerHTML);
-    });
-    totalSumXP = 0;
     saveWeekProgress();
 }
 
@@ -565,7 +583,6 @@ function saveWeekProgress() {
         amountOfTasks = ulYearTasks.children.length;
         for (var p=0; p<amountOfTasks ; p++){
             allTasksDoneEver[p] = (ulYearTasks.children[p].outerHTML);
-            
         }
         //Make the updated array a string and automatically save it on localStorage
         localStorage.setItem("listOfAllTasksDoneEver", JSON.stringify(allTasksDoneEver) );
@@ -953,16 +970,14 @@ console.log(JSON.stringify(localStorage.getItem(localStorage)));
 /// 
 
 let backupButton = document.getElementById("saveBackupBtn");
+let importBackupBtn = document.getElementById("importBackupBtn");
 
 backupButton.addEventListener("click", createBackup);
+backupFileInput.addEventListener("change", loadBackup);
 
 function createBackup() {
-    const pageHTML = document.documentElement.outerHTML;
     const localStorageData = JSON.stringify(localStorage);
-
-    // Combine the page HTML and localStorage data into a single object
     const backupData = {
-        pageHTML,
         localStorageData,
     };
 
@@ -974,9 +989,58 @@ function createBackup() {
     a.href = URL.createObjectURL(blob);
     
     // Set the download attribute and filename
-    a.download = 'page_backup.json';
+    a.download = 'TaskLVLUP_progress_backup.json';
     a.click();
 
     // Clean up
     URL.revokeObjectURL(a.href);
+}
+
+function loadBackup() {
+    const fileInput = document.getElementById('backupFileInput');
+    if (fileInput.files.length === 0) {
+        alert('Please select a backup file.');
+        return;
+    }
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+        const backupData = JSON.parse(event.target.result);
+        console.log("LA INFORMACION DEL OBJETO EVENT ES: /n", event);
+        console.log("LA INFORMACION QUE CONTIENE EL BACKUP IMPORTADO ES: /n", backupData);
+        // Restore the page state
+        restorePageState(backupData);
+    };
+
+    reader.readAsText(file);
+}
+
+function restorePageState(backupData) {
+
+    // Restore the localStorage data
+    const localStorageData = JSON.parse(backupData.localStorageData);
+    for (const key in localStorageData) {
+        localStorage.setItem(key, localStorageData[key]);
+    }
+
+    removeAllChildrenFromUL("ulWeekTasks","ulMonthTasks","ulYearTasks","tasksAddedList");
+
+
+    loadWeekProgress();
+    loadtasksArrayRecommendation();
+    loadCurrentXP();
+
+    saveWeekProgress();
+}
+
+// Remove all children (list items) from the <ul> element
+function removeAllChildrenFromUL(...ulIds) {
+    ulIds.forEach((ulId) => {
+        console.log(ulId.children);
+        const ulElement = document.getElementById(ulId);
+        while (ulElement.firstChild) {
+            ulElement.removeChild(ulElement.firstChild);
+        }
+    });
 }
